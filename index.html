@@ -1,0 +1,4481 @@
+<!-- INDEX -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gestión Operativa</title>
+
+<link rel="icon" type="image/png" href="assets/img/Casco/casco cfe.png">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous">
+</script>
+<link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Roboto+Slab:400,300,700" rel="stylesheet">
+<link href="assets/css/styles.css" rel="stylesheet">
+<style>
+html{
+    zoom:1;
+}
+
+body{
+    width:100%;
+    min-height:100vh;
+    overflow-x:hidden;
+}
+
+body{
+    transition:0.4s;
+}
+
+body.modo-claro{
+    background:#f3f6f8 !important;
+    color:#111 !important;
+}
+
+body.modo-claro .dashboard-navbar,
+body.modo-claro .dashboard-hero-panel,
+body.modo-claro .dashboard-section,
+body.modo-claro .stat-card,
+body.modo-claro .equipo-card,
+body.modo-claro .persona-panel,
+body.modo-claro .accion-card,
+body.modo-claro .ia-panel,
+body.modo-claro .top-status,
+body.modo-claro .actividad-live{
+    background:white !important;
+    color:#111 !important;
+    box-shadow:0 10px 30px rgba(0,0,0,0.12) !important;
+}
+
+body.modo-claro h1,
+body.modo-claro h2,
+body.modo-claro h3,
+body.modo-claro h4,
+body.modo-claro p,
+body.modo-claro span{
+    color:#111 !important;
+}
+
+body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    z-index:-1;
+    background:
+        radial-gradient(circle at 20% 20%, rgba(0,255,153,0.18), transparent 35%),
+        radial-gradient(circle at 80% 30%, rgba(0,170,255,0.16), transparent 35%),
+        radial-gradient(circle at 50% 90%, rgba(255,230,109,0.12), transparent 35%);
+    animation:fondoMovimiento 12s ease-in-out infinite alternate;
+}
+
+@keyframes fondoMovimiento{
+    from{filter:hue-rotate(0deg) blur(0px);}
+    to{filter:hue-rotate(18deg) blur(1px);}
+}
+
+.top-status,
+.btn-modo-dashboard{
+    background:rgba(15,15,25,0.85);
+    color:white;
+    border:1px solid rgba(255,255,255,0.15);
+    border-radius:16px;
+    padding:12px 18px;
+    box-shadow:0 0 22px rgba(0,255,153,0.18);
+    backdrop-filter:blur(12px);
+    font-weight:bold;
+}
+
+.btn-modo-dashboard{
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.btn-modo-dashboard:hover{
+    transform:scale(1.05);
+    box-shadow:0 0 28px rgba(0,255,153,0.35);
+}
+
+.toast-container-custom{
+    position:fixed;
+    top:90px;
+    right:25px;
+    z-index:9999;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+}
+
+.toast-custom{
+    background:rgba(15,15,25,0.92);
+    color:white;
+    padding:15px 20px;
+    border-radius:15px;
+    box-shadow:0 0 25px rgba(0,170,255,0.45);
+    border:1px solid rgba(255,255,255,0.18);
+    animation:entradaToast 0.4s ease;
+    font-weight:bold;
+    min-width:260px;
+}
+
+@keyframes entradaToast{
+    from{transform:translateX(120%);opacity:0;}
+    to{transform:translateX(0);opacity:1;}
+}
+
+.ia-panel{
+    margin-top:25px;
+    background:rgba(255,255,255,0.06);
+    border:1px solid rgba(255,255,255,0.14);
+    border-radius:20px;
+    padding:22px;
+    box-shadow:0 0 30px rgba(0,170,255,0.20);
+}
+
+.ia-panel h4{
+    color:white;
+    font-weight:bold;
+    margin-bottom:10px;
+}
+
+.ia-panel p{
+    color:#dcdcdc;
+    margin:6px 0;
+}
+
+.dashboard-hero-panel,
+.dashboard-section,
+.stat-card,
+.accion-card,
+.persona-panel{
+    animation:aparecerSuave 0.7s ease both;
+}
+
+@keyframes aparecerSuave{
+    from{opacity:0;transform:translateY(20px);}
+    to{opacity:1;transform:translateY(0);}
+}
+
+.dashboard-hero-panel:hover,
+.stat-card:hover,
+.accion-card:hover,
+.persona-panel:hover{
+    transform:translateY(-4px);
+    transition:0.3s;
+}
+
+.equipo-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:18px;
+}
+
+.equipo-card{
+    display:flex;
+    align-items:center;
+    gap:18px;
+    background:rgba(255,255,255,0.04);
+    border:1px solid rgba(255,255,255,0.12);
+    padding:18px 22px;
+    border-radius:20px;
+    transition:0.35s;
+    position:relative;
+    overflow:hidden;
+    backdrop-filter:blur(10px);
+    cursor:pointer;
+}
+
+.equipo-card::after{
+    content:"";
+    position:absolute;
+    left:15%;
+    right:15%;
+    bottom:0;
+    height:5px;
+    border-radius:50%;
+    opacity:0;
+    filter:blur(10px);
+    transition:0.35s;
+}
+
+.equipo-card:hover{
+    transform:translateY(-6px) scale(1.02);
+}
+
+.equipo-card:hover::after{
+    opacity:1;
+    height:12px;
+}
+
+.equipo-card img{
+    width:78px;
+    height:78px;
+    object-fit:cover;
+    border-radius:50%;
+    border:4px solid white;
+}
+
+.equipo-card h4{
+    color:white;
+    font-size:20px;
+    font-weight:bold;
+    margin:0;
+}
+
+.equipo-card p{
+    color:#dcdcdc;
+    font-size:14px;
+    margin:0;
+}
+
+.equipo-elizabeth:hover{
+    box-shadow:0 0 25px #00ff99,0 0 45px #00ff99,0 18px 45px rgba(0,255,153,0.95);
+}
+
+.equipo-elizabeth::after{
+    background:#00ff99;
+    box-shadow:0 0 20px #00ff99,0 0 40px #00ff99,0 0 70px #00ff99;
+}
+
+.equipo-jaso:hover{
+    box-shadow:0 0 25px #00aaff,0 0 45px #00aaff,0 18px 45px rgba(0,170,255,0.95);
+}
+
+.equipo-jaso::after{
+    background:#00aaff;
+    box-shadow:0 0 20px #00aaff,0 0 40px #00aaff,0 0 70px #00aaff;
+}
+
+.equipo-enrique:hover{
+    box-shadow:0 0 25px #fff7b2,0 0 45px #ffe66d,0 18px 45px rgba(255,230,109,0.95);
+}
+
+.equipo-enrique::after{
+    background:#ffe66d;
+    box-shadow:0 0 20px #ffe66d,0 0 40px #ffe66d,0 0 70px #ffe66d;
+}
+
+.modal-equipo{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.78);
+    display:none;
+    justify-content:center;
+    align-items:center;
+    z-index:9998;
+}
+
+.modal-equipo.activo{
+    display:flex;
+}
+
+.modal-contenido{
+    background:rgba(20,20,35,0.96);
+    border:1px solid rgba(255,255,255,0.18);
+    border-radius:25px;
+    padding:30px;
+    max-width:420px;
+    width:90%;
+    text-align:center;
+    color:white;
+    box-shadow:0 0 45px rgba(0,170,255,0.45);
+    animation:zoomModal 0.35s ease;
+}
+
+@keyframes zoomModal{
+    from{transform:scale(0.7);opacity:0;}
+    to{transform:scale(1);opacity:1;}
+}
+
+.modal-contenido img{
+    width:180px;
+    height:180px;
+    object-fit:cover;
+    border-radius:50%;
+    border:5px solid white;
+    margin-bottom:18px;
+}
+
+.modal-contenido h3{
+    font-weight:bold;
+    margin-bottom:8px;
+}
+
+.modal-contenido p{
+    color:#dcdcdc;
+}
+
+/* ========================= */
+/* SELECTOR DE USUARIO NAVBAR */
+/* ========================= */
+
+.usuario-navbar-picker{
+    position:relative;
+    margin-left:12px;
+    margin-right:12px;
+}
+
+.usuario-navbar-btn{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    background:rgba(255,255,255,0.06);
+    border:1px solid rgba(255,255,255,0.16);
+    border-radius:999px;
+    padding:6px 14px 6px 6px;
+    cursor:pointer;
+    color:white;
+    transition:0.25s;
+}
+
+.usuario-navbar-btn:hover{
+    background:rgba(255,255,255,0.12);
+}
+
+.usuario-navbar-btn img{
+    width:50px;
+    height:50px;
+    border-radius:50%;
+    object-fit:cover;
+    border:2px solid rgba(255,255,255,0.7);
+}
+
+.usuario-navbar-btn span{
+    font-size:15px;
+    font-weight:bold;
+    color:white !important;
+}
+
+.usuario-navbar-menu{
+    position:absolute;
+    right:0;
+    top:62px;
+    width:320px;
+    background:#1f1b22;
+    border:1px solid rgba(255,255,255,0.12);
+    border-radius:14px;
+    padding:8px;
+    box-shadow:0 15px 35px rgba(0,0,0,0.45);
+    display:none;
+    z-index:10000;
+}
+
+.usuario-navbar-menu.activo{
+    display:block;
+}
+
+.usuario-navbar-option{
+    width:100%;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    background:transparent;
+    border:none;
+    color:white;
+    padding:12px;
+    border-radius:10px;
+    cursor:pointer;
+    text-align:left;
+    transition:0.2s;
+}
+
+.usuario-navbar-option:hover{
+    background:rgba(255,255,255,0.08);
+}
+
+.usuario-navbar-option img{
+    width:44px;
+    height:44px;
+    border-radius:50%;
+    object-fit:cover;
+}
+
+.usuario-navbar-option strong{
+    display:block;
+    font-size:15px;
+    color:white;
+}
+
+.usuario-navbar-option small{
+    display:block;
+    font-size:12px;
+    color:#bdbdbd;
+}
+
+.estado-mini{
+    width:11px;
+    height:11px;
+    border-radius:50%;
+    background:#777;
+    display:inline-block;
+    margin-left:auto;
+}
+
+.estado-mini.activo{
+    background:#00ff99;
+    box-shadow:0 0 10px #00ff99;
+}
+
+.cerrar-sesion-option i{
+    font-size:19px;
+    color:#ff5c5c;
+    width:44px;
+    text-align:center;
+}
+
+body.modo-claro .usuario-navbar-btn{
+    background:#f1f3f4;
+    color:#202124;
+}
+
+body.modo-claro .usuario-navbar-btn span{
+    color:#202124 !important;
+}
+
+body.modo-claro .usuario-navbar-menu{
+    background:white;
+    color:#202124;
+}
+
+body.modo-claro .usuario-navbar-option strong{
+    color:#202124;
+}
+
+body.modo-claro .usuario-navbar-option small{
+    color:#5f6368;
+}
+
+body.modo-claro .usuario-navbar-option:hover{
+    background:#f1f3f4;
+}
+
+@media(max-width:900px){
+    .equipo-grid{
+        grid-template-columns:1fr;
+    }
+
+    .usuario-navbar-btn span{
+        display:none;
+    }
+}
+
+
+/* ========================= */
+/* MENÚ IA COMPACTO NAVBAR */
+/* ========================= */
+
+.dashboard-menu{
+    display:flex;
+    align-items:center;
+    gap:14px;
+}
+
+.menu-ia-wrapper{
+    position:relative;
+    z-index:10050;
+}
+
+.menu-ia-toggle{
+    width:58px;
+    height:48px;
+    background:rgba(10,15,25,0.82);
+    border:1px solid rgba(0,170,255,0.35);
+    border-radius:18px;
+    cursor:pointer;
+    position:relative;
+    box-shadow:0 0 22px rgba(0,170,255,0.22);
+    backdrop-filter:blur(14px);
+    transition:0.3s;
+}
+
+.menu-ia-toggle:hover{
+    transform:scale(1.07);
+    box-shadow:0 0 30px rgba(0,170,255,0.55);
+}
+
+.menu-ia-dot{
+    position:absolute;
+    top:8px;
+    left:28px;
+    width:12px;
+    height:12px;
+    background:#0d8bff;
+    border-radius:50%;
+    box-shadow:0 0 14px rgba(13,139,255,0.95);
+    animation:pulsoIA 1.6s infinite ease-in-out;
+}
+
+.menu-ia-linea{
+    position:absolute;
+    left:13px;
+    width:26px;
+    height:4px;
+    background:white;
+    border-radius:999px;
+    box-shadow:0 0 10px rgba(255,255,255,0.55);
+    transition:0.25s;
+}
+
+.menu-ia-linea.uno{
+    bottom:17px;
+}
+
+.menu-ia-linea.dos{
+    bottom:9px;
+    width:18px;
+}
+
+.menu-ia-toggle.activo .menu-ia-linea.uno{
+    transform:rotate(42deg);
+    bottom:14px;
+    left:16px;
+}
+
+.menu-ia-toggle.activo .menu-ia-linea.dos{
+    width:26px;
+    transform:rotate(-42deg);
+    bottom:14px;
+    left:16px;
+}
+
+@keyframes pulsoIA{
+    0%,100%{
+        transform:scale(1);
+        opacity:1;
+    }
+    50%{
+        transform:scale(1.28);
+        opacity:0.75;
+    }
+}
+
+.menu-ia-panel{
+    position:absolute;
+    top:64px;
+    right:0;
+    width:290px;
+    background:rgba(12,16,28,0.94);
+    border:1px solid rgba(0,170,255,0.28);
+    border-radius:22px;
+    padding:14px;
+    display:none;
+    box-shadow:0 18px 45px rgba(0,0,0,0.45),0 0 35px rgba(0,170,255,0.28);
+    backdrop-filter:blur(18px);
+    animation:menuIAEntrada 0.28s ease;
+}
+
+.menu-ia-panel.activo{
+    display:block;
+}
+
+@keyframes menuIAEntrada{
+    from{
+        opacity:0;
+        transform:translateY(-10px) scale(0.96);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0) scale(1);
+    }
+}
+
+.menu-ia-header{
+    padding:10px 12px 14px;
+    margin-bottom:8px;
+    border-bottom:1px solid rgba(255,255,255,0.12);
+}
+
+.menu-ia-header strong{
+    color:white;
+    display:block;
+    font-size:16px;
+}
+
+.menu-ia-header span{
+    color:#b9c7d8;
+    font-size:12px;
+}
+
+.menu-ia-panel a,
+.menu-ia-panel button{
+    width:100%;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:13px 14px;
+    margin-bottom:8px;
+    border-radius:15px;
+    border:1px solid rgba(255,255,255,0.08);
+    background:rgba(255,255,255,0.045);
+    color:white !important;
+    text-decoration:none;
+    font-weight:800;
+    font-size:14px;
+    cursor:pointer;
+    transition:0.25s;
+    text-align:left;
+}
+
+.menu-ia-panel a:hover,
+.menu-ia-panel button:hover{
+
+    background:linear-gradient(
+        135deg,
+        #0d8bff,
+        #00c6ff
+    );
+
+    color:#111 !important;
+
+    transform:translateX(4px);
+
+    box-shadow:
+        0 0 22px rgba(13,139,255,0.35);
+
+}
+
+body.modo-claro .menu-ia-panel a:hover,
+body.modo-claro .menu-ia-panel button:hover{
+
+    color:white !important;
+
+}
+
+.menu-ia-status{
+    margin-top:10px;
+    padding:12px;
+    border-radius:15px;
+    background:rgba(0,170,255,0.10);
+    border:1px solid rgba(0,170,255,0.18);
+    color:white;
+    font-size:13px;
+    line-height:1.6;
+}
+
+.menu-ia-status span{
+    color:white !important;
+    font-weight:800;
+}
+
+body.modo-claro .menu-ia-toggle{
+    background:#ffffff;
+    border:1px solid rgba(13,139,255,0.25);
+    box-shadow:0 8px 25px rgba(13,139,255,0.18);
+}
+
+body.modo-claro .menu-ia-linea{
+    background:#111;
+    box-shadow:none;
+}
+
+body.modo-claro .menu-ia-panel{
+    background:rgba(255,255,255,0.96);
+    color:#111;
+    border:1px solid rgba(13,139,255,0.20);
+    box-shadow:0 18px 45px rgba(0,0,0,0.16),0 0 24px rgba(13,139,255,0.14);
+}
+
+body.modo-claro .menu-ia-header strong,
+body.modo-claro .menu-ia-panel a,
+body.modo-claro .menu-ia-panel button,
+body.modo-claro .menu-ia-status,
+body.modo-claro .menu-ia-status span{
+    color:#111 !important;
+}
+
+body.modo-claro .menu-ia-header span{
+    color:#52606d !important;
+}
+
+body.modo-claro .menu-ia-panel a,
+body.modo-claro .menu-ia-panel button{
+    background:#f3f7fb;
+    border:1px solid rgba(0,0,0,0.08);
+}
+
+body.modo-claro .menu-ia-panel a:hover,
+body.modo-claro .menu-ia-panel button:hover{
+    color:white !important;
+}
+
+body.modo-claro .menu-ia-status{
+    background:#eef7ff;
+}
+
+
+/* ========================= */
+/* ESTADOS, PRIORIDAD Y DESHACER */
+/* ========================= */
+
+.filtro-estado-box{
+    margin:18px 0 22px 0;
+    display:flex;
+    justify-content:flex-start;
+    align-items:center;
+    gap:12px;
+    flex-wrap:wrap;
+}
+
+.filtro-estado-box label{
+    font-weight:800;
+    color:white;
+}
+
+body.modo-claro .filtro-estado-box label{
+    color:#111 !important;
+}
+
+.filtro-estado-box select{
+    max-width:260px;
+    border-radius:14px;
+    padding:12px;
+    font-weight:700;
+}
+
+.pendiente-card{
+    border-left:8px solid #0d8bff;
+    transition:0.25s ease;
+}
+
+.pendiente-card.estado-pendiente{
+    border-left-color:#0d8bff;
+}
+
+.pendiente-card.estado-proceso{
+    border-left-color:#ffb703;
+}
+
+.pendiente-card.estado-finalizado{
+    border-left-color:#00c853;
+    opacity:0.82;
+}
+
+.estado-badge{
+    display:inline-block;
+    padding:6px 12px;
+    border-radius:999px;
+    font-size:12px;
+    font-weight:900;
+    margin-top:8px;
+    letter-spacing:0.4px;
+}
+
+.estado-badge.pendiente{
+    background:rgba(13,139,255,0.15);
+    color:#4db5ff;
+    border:1px solid rgba(13,139,255,0.35);
+}
+
+.estado-badge.proceso{
+    background:rgba(255,183,3,0.15);
+    color:#ffcf4d;
+    border:1px solid rgba(255,183,3,0.35);
+}
+
+.estado-badge.urgente{
+    background:rgba(255,59,59,0.15);
+    color:#ff7777;
+    border:1px solid rgba(255,59,59,0.35);
+}
+
+.estado-badge.finalizado{
+    background:rgba(0,200,83,0.15);
+    color:#00e676;
+    border:1px solid rgba(0,200,83,0.35);
+}
+
+.estado-select-mini{
+    margin-top:10px;
+    max-width:190px;
+    font-size:13px;
+    padding:8px 10px;
+    border-radius:12px;
+    background:rgba(255,255,255,0.06);
+    color:white;
+    border:1px solid rgba(255,255,255,0.16);
+    font-weight:700;
+}
+
+body.modo-claro .estado-select-mini{
+    background:white !important;
+    color:#111 !important;
+    border:1px solid rgba(13,139,255,0.18);
+}
+
+.deshacer-toast{
+    background:rgba(15,15,25,0.96);
+    color:white;
+    padding:16px 18px;
+    border-radius:16px;
+    border:1px solid rgba(0,170,255,0.25);
+    box-shadow:0 0 25px rgba(0,170,255,0.28);
+    min-width:300px;
+}
+
+.deshacer-toast button{
+    margin-top:10px;
+    width:100%;
+    border:none;
+    border-radius:12px;
+    padding:10px;
+    font-weight:900;
+    background:linear-gradient(135deg,#0d8bff,#00c6ff);
+    color:#111;
+}
+
+body.modo-claro .deshacer-toast{
+    background:white;
+    color:#111;
+}
+
+
+/* ========================= */
+/* BITÁCORA, USUARIOS ACTIVOS Y KANBAN */
+/* ========================= */
+
+.panel-vivo-grid{
+    display:grid;
+    grid-template-columns:1.1fr 1fr;
+    gap:22px;
+    margin-bottom:28px;
+}
+
+.panel-vivo-card{
+    background:rgba(255,255,255,0.06);
+    border:1px solid rgba(255,255,255,0.14);
+    border-radius:24px;
+    padding:22px;
+    box-shadow:0 0 28px rgba(0,170,255,0.14);
+    backdrop-filter:blur(12px);
+}
+
+.panel-vivo-card h3{
+    color:white;
+    font-weight:900;
+    margin-bottom:14px;
+}
+
+.bitacora-lista{
+    max-height:280px;
+    overflow:auto;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+}
+
+.bitacora-item{
+    background:rgba(255,255,255,0.06);
+    border:1px solid rgba(255,255,255,0.10);
+    border-radius:16px;
+    padding:12px 14px;
+    color:white;
+    animation:entradaBitacora 0.3s ease;
+}
+
+@keyframes entradaBitacora{
+    from{opacity:0;transform:translateX(-12px);}
+    to{opacity:1;transform:translateX(0);}
+}
+
+.bitacora-item strong{
+    color:#00c6ff;
+}
+
+.bitacora-item small{
+    display:block;
+    margin-top:4px;
+    color:#b9c7d8;
+}
+
+.usuarios-activos-grid{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:12px;
+}
+
+.usuario-activo-card{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    background:rgba(255,255,255,0.06);
+    border:1px solid rgba(255,255,255,0.10);
+    border-radius:18px;
+    padding:13px;
+}
+
+.usuario-activo-card img{
+    width:54px;
+    height:54px;
+    border-radius:50%;
+    object-fit:cover;
+    border:3px solid rgba(255,255,255,0.65);
+}
+
+.usuario-activo-card h4{
+    margin:0;
+    color:white;
+    font-size:17px;
+    font-weight:900;
+}
+
+.usuario-activo-card p{
+    margin:2px 0;
+    color:#d6dde8;
+    font-size:13px;
+}
+
+.usuario-activo-card .estado-circulo{
+    width:13px;
+    height:13px;
+    border-radius:50%;
+    background:#777;
+    margin-left:auto;
+}
+
+.usuario-activo-card.activo .estado-circulo{
+    background:#00ff99;
+    box-shadow:0 0 12px #00ff99;
+}
+
+.kanban-section{
+    margin-top:26px;
+}
+
+.kanban-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:18px;
+}
+
+.kanban-columna{
+    min-height:280px;
+    background:rgba(255,255,255,0.05);
+    border:1px solid rgba(255,255,255,0.14);
+    border-radius:22px;
+    padding:16px;
+}
+
+.kanban-columna h3{
+    color:white;
+    font-size:20px;
+    font-weight:900;
+    margin-bottom:14px;
+}
+
+.kanban-lista{
+    min-height:200px;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+}
+
+.kanban-card{
+    background:rgba(15,15,25,0.86);
+    border:1px solid rgba(255,255,255,0.14);
+    border-left:7px solid #0d8bff;
+    border-radius:16px;
+    padding:14px;
+    color:white;
+    cursor:default;
+    box-shadow:0 8px 20px rgba(0,0,0,0.18);
+}
+
+
+
+.kanban-card.urgente{
+    border-left-color:#ff0000 !important;
+    background:linear-gradient(
+        135deg,
+        rgba(255,0,0,0.25),
+        rgba(255,70,70,0.08)
+    ) !important;
+    box-shadow:
+        0 0 20px rgba(255,0,0,0.30),
+        inset 0 0 10px rgba(255,0,0,0.08);
+}
+
+.kanban-card.urgente strong{
+    color:#ff4d4d !important;
+}
+
+.kanban-card.proceso{
+    border-left-color:#ffb703;
+}
+
+.kanban-card.finalizado{
+    border-left-color:#00c853;
+}
+
+.kanban-card strong{
+    display:block;
+    font-size:15px;
+}
+
+.kanban-card small{
+    display:block;
+    margin-top:6px;
+    color:#c8d2dc;
+}
+
+
+
+body.modo-claro .panel-vivo-card,
+body.modo-claro .kanban-columna{
+    background:rgba(255,255,255,0.82) !important;
+    border:1px solid rgba(13,139,255,0.14) !important;
+    box-shadow:0 12px 35px rgba(0,0,0,0.08) !important;
+}
+
+body.modo-claro .panel-vivo-card h3,
+body.modo-claro .kanban-columna h3,
+body.modo-claro .usuario-activo-card h4{
+    color:#111 !important;
+}
+
+body.modo-claro .bitacora-item,
+body.modo-claro .usuario-activo-card,
+body.modo-claro .kanban-card{
+    background:white !important;
+    color:#111 !important;
+    border:1px solid rgba(13,139,255,0.12) !important;
+}
+
+body.modo-claro .bitacora-item small,
+body.modo-claro .usuario-activo-card p,
+body.modo-claro .kanban-card small{
+    color:#52606d !important;
+}
+
+@media(max-width:1000px){
+    .panel-vivo-grid,
+    .kanban-grid{
+        grid-template-columns:1fr;
+    }
+}
+
+
+/* BOTÓN CERRAR SESIÓN */
+
+.btn-cerrar-sesion{
+    background:linear-gradient(135deg,#ff4b4b,#ff1f1f);
+    color:white !important;
+    border:none;
+    border-radius:14px;
+    padding:10px 18px;
+    font-weight:900;
+    transition:0.25s ease;
+    box-shadow:0 8px 22px rgba(255,0,0,0.25);
+}
+
+.btn-cerrar-sesion:hover{
+    transform:translateY(-2px);
+    box-shadow:0 12px 28px rgba(255,0,0,0.35);
+}
+
+body.modo-claro .btn-cerrar-sesion{
+    color:white !important;
+}
+
+
+/* BOTÓN CERRAR SESIÓN MENÚ */
+
+.cerrar-sesion-menu{
+    width:100%;
+    border:none;
+    border-radius:14px;
+    padding:14px;
+    margin-top:10px;
+    font-weight:900;
+    background:linear-gradient(135deg,#ff4b4b,#ff1f1f);
+    color:white;
+    cursor:pointer;
+    transition:0.25s ease;
+    box-shadow:0 8px 22px rgba(255,0,0,0.22);
+}
+
+.cerrar-sesion-menu:hover{
+    transform:translateY(-2px);
+    box-shadow:0 12px 28px rgba(255,0,0,0.35);
+}
+
+
+/* BOTÓN MENÚ RÁPIDO */
+
+.cerrar-sesion-menu{
+    width:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    border:none;
+    border-radius:16px;
+    padding:14px;
+    margin-top:14px;
+    font-size:16px;
+    font-weight:900;
+    background:linear-gradient(135deg,#ff4b4b,#ff1f1f);
+    color:white !important;
+    cursor:pointer;
+    transition:0.25s ease;
+    box-shadow:0 10px 26px rgba(255,0,0,0.25);
+}
+
+.cerrar-sesion-menu:hover{
+    transform:translateY(-2px);
+    box-shadow:0 14px 32px rgba(255,0,0,0.35);
+}
+
+
+/* ========================= */
+/* CERRAR SESIÓN DENTRO DEL MENÚ RÁPIDO */
+/* ========================= */
+
+.menu-ia-panel .cerrar-sesion-menu{
+    width:100% !important;
+    display:flex !important;
+    align-items:center !important;
+    justify-content:flex-start !important;
+    gap:12px !important;
+    padding:13px 14px !important;
+    margin-bottom:8px !important;
+    margin-top:0 !important;
+    border-radius:15px !important;
+    border:1px solid rgba(255,75,75,0.35) !important;
+    background:rgba(255,75,75,0.10) !important;
+    color:#ff5c5c !important;
+    text-decoration:none !important;
+    font-weight:900 !important;
+    font-size:14px !important;
+    cursor:pointer !important;
+    transition:0.25s !important;
+    text-align:left !important;
+    box-shadow:none !important;
+}
+
+.menu-ia-panel .cerrar-sesion-menu:hover{
+    background:linear-gradient(135deg,#ff4b4b,#ff1f1f) !important;
+    color:white !important;
+    transform:translateX(4px) !important;
+    box-shadow:0 0 22px rgba(255,75,75,0.35) !important;
+}
+
+body.modo-claro .menu-ia-panel .cerrar-sesion-menu{
+    background:#fff1f1 !important;
+    color:#d90000 !important;
+    border:1px solid rgba(217,0,0,0.20) !important;
+}
+
+body.modo-claro .menu-ia-panel .cerrar-sesion-menu:hover{
+    background:linear-gradient(135deg,#ff4b4b,#ff1f1f) !important;
+    color:white !important;
+}
+
+
+
+
+
+
+
+/* ========================= */
+/* URGENTES EN ROJO - PIZARRÓN */
+/* ========================= */
+
+.pendiente-card.estado-urgente{
+    border-left:10px solid #ff0000 !important;
+    background:linear-gradient(
+        135deg,
+        rgba(255,0,0,0.32),
+        rgba(255,70,70,0.12)
+    ) !important;
+    box-shadow:
+        0 0 24px rgba(255,0,0,0.45),
+        inset 0 0 12px rgba(255,0,0,0.12) !important;
+}
+
+.pendiente-card.estado-urgente h5{
+    color:#ff4d4d !important;
+    font-weight:900 !important;
+}
+
+.pendiente-card.estado-urgente .estado-badge,
+.estado-badge.urgente{
+    background:#ff0000 !important;
+    color:white !important;
+    border:none !important;
+}
+
+body.modo-claro .pendiente-card.estado-urgente{
+    background:linear-gradient(
+        135deg,
+        rgba(255,0,0,0.22),
+        rgba(255,255,255,0.95)
+    ) !important;
+    border-left:10px solid #ff0000 !important;
+}
+
+body.modo-claro .pendiente-card.estado-urgente h5{
+    color:#c40000 !important;
+}
+
+
+/* ========================= */
+/* BARRA DE PROGRESO RESUMEN */
+/* ========================= */
+
+.barra-progreso-box{
+    margin-top:18px;
+}
+
+.barra-progreso{
+    width:100%;
+    height:18px;
+    background:rgba(255,255,255,0.16);
+    border-radius:999px;
+    overflow:hidden;
+    border:1px solid rgba(255,255,255,0.18);
+}
+
+.barra-interna{
+    width:0%;
+    min-width:0%;
+    height:100%;
+    background:linear-gradient(90deg,#00ff99,#00c6ff);
+    border-radius:999px;
+    transition:width 0.45s ease;
+    box-shadow:0 0 18px rgba(0,198,255,0.55);
+}
+
+#textoProgreso{
+    margin-top:8px;
+    font-weight:900;
+    color:white;
+    text-align:center;
+}
+
+body.modo-claro .barra-progreso{
+    background:#e5eaf0;
+    border:1px solid rgba(0,0,0,0.08);
+}
+
+body.modo-claro #textoProgreso{
+    color:#111 !important;
+}
+
+
+/* AJUSTE FINAL: prioridad para urgentes */
+.pendiente-card.estado-urgente{
+    border-left:10px solid #ff0000 !important;
+    background:linear-gradient(135deg,rgba(255,0,0,0.32),rgba(255,70,70,0.12)) !important;
+}
+
+.pendiente-card.estado-urgente h5{
+    color:#ff4d4d !important;
+}
+
+</style>
+</head>
+
+<body class="dashboard-body">
+
+    
+
+
+<!-- PANTALLA DE CARGA -->
+<div id="pantallaCarga">
+
+    <img
+        src="assets/img/Casco/casco cfe.png"
+        alt="Logo"
+        class="logo-carga">
+
+<div class="barra-carga">
+
+    <div class="barra-progreso-carga"></div>
+
+    <div class="camion-cfe-carga">
+        <div class="camion-franja"></div>
+        <div class="camion-cofre"></div>
+        <div class="camion-cabina"></div>
+        <div class="camion-caja"></div>
+        <div class="camion-luz"></div>
+
+        <div class="llanta camion-llanta-1"></div>
+        <div class="llanta camion-llanta-2"></div>
+    </div>
+
+</div>
+        
+</div>
+
+
+<div class="toast-container-custom" id="notificaciones"></div>
+
+<div class="modal-equipo" id="modalEquipo" onclick="cerrarModalEquipo()">
+    <div class="modal-contenido" onclick="event.stopPropagation()">
+        <img id="modalImagen" src="" alt="Integrante">
+        <h3 id="modalNombre"></h3>
+        <p id="modalArea"></p>
+        <p id="modalDescripcion"></p>
+
+        <button class="btn btn-dashboard mt-3" onclick="cerrarModalEquipo()">
+            Cerrar
+        </button>
+    </div>
+</div>
+
+
+
+<nav class="dashboard-navbar">
+
+    <div class="dashboard-logo">
+        <img src="assets/img/Casco/casco cfe.png" alt="Logo">
+
+        <div>
+            <h3>Gestión Operativa</h3>
+            <p>Sistema de pendientes</p>
+        </div>
+    </div>
+
+    <div class="dashboard-menu">
+
+        <div class="menu-ia-wrapper">
+
+            <button
+                type="button"
+                class="menu-ia-toggle"
+                id="menuIAToggle"
+                onclick="toggleMenuIA()"
+                aria-label="Abrir menú">
+
+                <span class="menu-ia-dot"></span>
+                <span class="menu-ia-linea uno"></span>
+                <span class="menu-ia-linea dos"></span>
+
+            </button>
+
+            <div class="menu-ia-panel" id="menuIAPanel">
+
+                <div class="menu-ia-header">
+                    <strong>⚡ Menú rápido</strong>
+                    <span>Gestión Operativa</span>
+                </div>
+
+                <a href="#inicio" onclick="cerrarMenuIA()">🏠 INICIO</a>
+                <a href="#pendientes" onclick="cerrarMenuIA()">📌 PENDIENTES</a>
+                <a href="#pizarron" onclick="cerrarMenuIA()">📋 PIZARRÓN</a>
+                <a href="#panel-vivo" onclick="cerrarMenuIA()">📒 BITÁCORA</a>
+                <a href="#kanbanPendientes" onclick="cerrarMenuIA()">🧩 TABLERO</a>
+                <a href="#equipo" onclick="cerrarMenuIA()">👥 EQUIPO</a>
+
+                <button type="button" onclick="cambiarModoDashboard(); cerrarMenuIA();">
+                    🌙 / ☀️ Cambiar tema
+                </button>
+
+                <button type="button" onclick="cerrarSesionUsuario(); cerrarMenuIA();">
+                    👤 Cambiar usuario
+                </button>
+
+                <button
+                    type="button"
+                    class="cerrar-sesion-menu"
+                    onclick="cerrarMenuIA(); cerrarSesionSistema();">
+                    🔒 CERRAR SESIÓN
+                </button>
+
+                <div class="menu-ia-status">
+                    👤 Usuario activo:
+                    <span id="usuarioActualTexto">Ningún usuario</span>
+                    <br>
+                    🕒 <span id="fechaHoraActual"></span>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</nav>
+
+<main class="dashboard-main" id="inicio">
+
+    <section class="dashboard-hero-panel">
+
+        <div>
+            <h1>Bienvenido a Gestión Operativa</h1>
+
+            <p>
+                Panel de control para administrar,
+                revisar y finalizar pendientes
+                del equipo operativo.
+            </p>
+
+            <a href="#pizarron" class="btn btn-dashboard">
+                Ver pizarrón
+            </a>
+        </div>
+
+        <div class="dashboard-hero-card">
+
+            <h4>📊 Resumen General</h4>
+
+            <div class="resumen-item">
+                📌 Pendientes activos:
+                <span id="heroActivos">0</span>
+            </div>
+
+            <div class="resumen-item">
+                ✅ Finalizados:
+                <span id="heroFinalizados">0</span>
+            </div>
+
+            <div class="resumen-item">
+                ⚠️ Urgentes:
+                <span id="heroUrgentes">0</span>
+            </div>
+
+            <hr>
+
+            <div class="resumen-item">
+                🟢 Sistema funcionando
+            </div>
+
+            <div class="resumen-item">
+                🔄 Última actualización:
+                <span id="heroHora"></span>
+            </div>
+
+            <div class="resumen-item">
+                👥 Usuario actual:
+                <span id="usuarioActualTextoHero">Ningún usuario seleccionado</span>
+            </div>
+
+            <hr>
+
+            <div class="resumen-item">
+                📢 <span id="heroActividad">
+                    Esperando actividad...
+                </span>
+            </div>
+
+            <div class="barra-progreso-box">
+
+                <div class="barra-progreso">
+                    <div class="barra-interna" id="barraProgreso"></div>
+                </div>
+
+                <p id="textoProgreso">
+                    0% completado
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <section class="dashboard-section" id="equipo">
+
+        <div class="section-header-dashboard">
+            <div>
+                <h2>Nuestro Equipo</h2>
+                <p>Integrantes del área operativa.</p>
+            </div>
+        </div>
+
+        <div class="equipo-grid">
+
+            <div class="equipo-card equipo-elizabeth"
+                 onclick="abrirModalEquipo(
+                    'assets/img/Equipo/2.jpg',
+                    'Lic. Elizabeth Alvarez Hernandez',
+                    'Gestión Operativa',
+                    'Encargada de dar seguimiento a pendientes del área operativa y actividades relacionadas con crédito.'
+                 )">
+                <img src="assets/img/Equipo/2.jpg" alt="Lic. Elizabeth Alvarez Hernandez">
+
+                <div>
+                    <h4>Lic. Elizabeth Alvarez Hernandez</h4>
+                    <p>Gestión Operativa</p>
+                </div>
+            </div>
+
+            <div class="equipo-card equipo-jaso"
+                 onclick="abrirModalEquipo(
+                    'assets/img/Equipo/3.jpg',
+                    'Ing. Juan Carlos Rodriguez Jasso',
+                    'Supervisión',
+                    'Responsable de revisar avances, coordinar actividades y supervisar pendientes del equipo.'
+                 )">
+                <img src="assets/img/Equipo/3.jpg" alt="Ing. Juan Carlos Rodriguez Jasso">
+
+                <div>
+                    <h4>Ing. Juan Carlos Rodriguez Jasso</h4>
+                    <p>Asuntos Consultivos</p>
+                </div>
+            </div>
+
+            <div class="equipo-card equipo-enrique"
+                 onclick="abrirModalEquipo(
+                    'assets/img/Equipo/1.jpg',
+                    'Ing. Luis Enrique Arredondo Facio',
+                    'Administración',
+                    'Encargado de administración, organización de información y revisión de reportes mediante tablas.'
+                 )">
+                <img src="assets/img/Equipo/1.jpg" alt="Ing. Luis Enrique Arredondo Facio">
+
+                <div>
+                    <h4>Ing. Luis Enrique Arredondo Facio</h4>
+                    <p>Administración</p>
+                </div>
+            </div>
+
+        </div>
+
+    
+</section>
+
+<section class="dashboard-section" id="evidenciasCampo">
+    <div class="section-header-dashboard">
+        <div>
+            <h2>📷 Evidencias de Campo</h2>
+            <p>Espacio para colocar evidencias cuando el personal se encuentre fuera de la oficina (Luis Enrique).</p>
+        </div>
+    </div>
+
+    <div style="border:2px dashed #3cb371;border-radius:18px;padding:30px;text-align:center;">
+        <h4>Sin evidencias disponibles</h4>
+        <p>Aquí podrán agregarse fotografías de los trabajos realizados en campo.</p>
+    </div>
+</section>
+
+    <section class="dashboard-stats">
+
+        <div class="stat-card actividad-card">
+            <span>ACTIVIDAD EN VIVO</span>
+
+            <h4 style="margin-top:10px;">
+                🔔 Sistema
+            </h4>
+
+            <p id="actividadTexto">
+                Esperando actividad del sistema...
+            </p>
+        </div>
+
+        <div class="stat-card">
+            <span>Total</span>
+            <h2 id="totalPendientes">0</h2>
+            <p>Pendientes registrados</p>
+        </div>
+
+        <div class="stat-card">
+            <span>Activos</span>
+            <h2 id="totalActivos">0</h2>
+            <p>Pendientes por terminar</p>
+        </div>
+
+        <div class="stat-card">
+            <span>Finalizados</span>
+            <h2 id="totalFinalizados">0</h2>
+            <p>Actividades completadas</p>
+        </div>
+
+    </section>
+
+    <section class="dashboard-section" id="panel-vivo">
+
+        <div class="section-header-dashboard">
+            <div>
+                <h2>Actividad y usuarios activos</h2>
+                <p>Bitácora en vivo y estado real del equipo.</p>
+            </div>
+        </div>
+
+        <div class="panel-vivo-grid">
+
+            <div class="panel-vivo-card">
+                <h3>📒 Bitácora en vivo</h3>
+                <p id="contadorBitacora" style="font-weight:bold;color:#00c6ff;">
+    🕒 Limpieza en: 30:00
+</p>
+                <div class="bitacora-lista" id="bitacoraLista">
+                    <div class="bitacora-item">
+                        Sistema listo
+                        <small>Esperando actividad...</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel-vivo-card">
+                <h3>👥 Usuarios activos</h3>
+                <div class="usuarios-activos-grid" id="usuariosActivosPanel"></div>
+            </div>
+
+        </div>
+
+    </section>
+
+    <section class="dashboard-section kanban-section" id="kanbanPendientes">
+
+        <div class="section-header-dashboard">
+            <div>
+                <h2>Tablero de estados</h2>
+                <small id="contadorTableroEstados" style="color:#8fa3b8;font-weight:bold;">
+                ⏸️ Sin finalizados
+                </small>
+
+                <p>Tablero visual de estados del sistema.</p>
+            </div>
+        </div>
+
+        <div class="kanban-grid">
+
+            <div class="kanban-columna" data-estado="pendiente">
+                <h3>📌 Pendiente</h3>
+                <div class="kanban-lista" id="kanban-pendiente"></div>
+            </div>
+
+            <div class="kanban-columna" data-estado="proceso">
+                <h3>🟡 En proceso</h3>
+                <div class="kanban-lista" id="kanban-proceso"></div>
+            </div>
+
+            <div class="kanban-columna" data-estado="finalizado">
+                <h3>✅ Finalizado</h3>
+                <div class="kanban-lista" id="kanban-finalizado"></div>
+            </div>
+
+        </div>
+
+    </section>
+
+    <section class="dashboard-section" id="pendientes">
+
+        <div class="section-header-dashboard">
+            <div>
+                <h2>Pendientes</h2>
+                <p>
+                    Selecciona una opción para
+                    agregar o revisar actividades.
+                </p>
+            </div>
+        </div>
+
+        <div class="acciones-grid">
+
+            <div class="accion-card" data-propietario="elizabeth">
+                <img src="assets/img/Apartados/cobranza.jpg">
+
+                <div>
+                    <h4>Lic. Elizabeth Alvarez Hernandez</h4>
+                    <p>Agendar pendientes</p>
+
+                    <a href="pendientes.html?usuario=Elizabeth"
+                       target="_blank"
+                       onclick="return validarAcceso(event)"
+                       class="btn btn-sm btn-dashboard">
+                        📋 Pendiente
+                    </a>
+
+                    <a href="grafica_pastel.html"
+                       target="_blank"
+                       onclick="return validarAcceso(event)"
+                       class="btn btn-sm btn-dashboard">
+                        🥧 Gráfica Pastel
+                    </a>
+                </div>
+            </div>
+
+            <div class="accion-card" data-propietario="Jasso">
+                <img src="assets/img/Apartados/jife.jpg">
+
+                <div>
+                    <h4>Ing. Juan Carlos Rodriguez Jasso</h4>
+                    <p>Agendar pendientes</p>
+
+                    <a href="pendientes.html?usuario=Jaso"
+                       target="_blank"
+                       onclick="return validarAcceso(event)"
+                       class="btn btn-sm btn-dashboard">
+                        📋 Pendiente
+                    </a>
+
+                    <a href="tablas.html"
+                       target="_blank"
+                       onclick="return validarAcceso(event)"
+                       class="btn btn-sm btn-dashboard">
+                        📊 Tablas
+                    </a>
+
+                    <a href="grafica_pastel.html"
+                       target="_blank"
+                       onclick="return validarAcceso(event)"
+                       class="btn btn-sm btn-dashboard">
+                        🥧 Gráfica Pastel
+                    </a>
+                </div>
+            </div>
+
+            <div class="accion-card" data-propietario="Enrique">
+                <img src="assets/img/Apartados/1_CFE_6671.jpg">
+
+                <div>
+                    <h4>Ing. Luis Enrique Arredondo Facio</h4>
+                    <p>Agendar pendientes</p>
+
+                    <a href="pendientes.html?usuario=Enrique"
+                       target="_blank"
+                       onclick="return validarAcceso(event)"
+                       class="btn btn-sm btn-dashboard">
+                        📋 Pendiente
+                    </a>
+
+                    <a href="tablas.html"
+                       target="_blank"
+                       onclick="return validarAcceso(event)"
+                       class="btn btn-sm btn-dashboard">
+                        📊 Tablas
+                    </a>
+
+                    <a href="grafica_pastel.html"
+                       target="_blank"
+                       onclick="return validarAcceso(event)"
+                       class="btn btn-sm btn-dashboard">
+                        🥧 Gráfica Pastel
+                    </a>
+                </div>
+            </div>
+
+        </div>
+
+    </section>
+
+    <section class="dashboard-section" id="pizarron">
+
+        <div class="section-header-dashboard">
+
+            <div>
+                <h2>Pizarrón de Pendientes</h2>
+                <p>
+                    Seguimiento general
+                    de actividades operativas.
+                </p>
+            </div>
+
+            <button type="button" class="btn btn-danger limpiar-btn" onclick="limpiarFinalizados()">
+                Limpiar finalizados
+            </button>
+
+        </div>
+
+        <button type="button"
+                class="btn btn-dashboard mb-3"
+                onclick="analizarPendientes()">
+            🤖 Analizar pendientes
+        </button>
+
+        <div class="ia-panel" id="panelIA" style="display:none;">
+            <h4>🤖 Análisis inteligente</h4>
+            <div id="resultadoIA"></div>
+        </div>
+
+        <div class="buscador-box">
+           <input type="text"
+       id="buscadorPendientes"
+       placeholder="Buscar pendiente o usuario..."
+       autocomplete="off"
+       value="">
+        </div>
+
+        <div class="filtro-estado-box">
+            <label for="filtroEstadoGeneral">Filtrar por estado:</label>
+            <select id="filtroEstadoGeneral" class="form-control">
+                <option value="todos">Todos</option>
+                <option value="pendiente">Pendiente</option>
+                <option value="proceso">En proceso</option>
+                <option value="urgente">Urgente</option>
+            </select>
+        </div>
+
+        <div class="pizarron-grid">
+
+            <div class="persona-panel panel-elizabeth">
+                <div class="persona-header">
+                    <h3>Lic. Elizabeth Alvarez Hernandez</h3>
+                    <span>Área operativa</span>
+                </div>
+
+                <select
+                    id="filtroElizabeth"
+                    class="form-control mb-3">
+
+                    <option value="normal">Orden normal</option>
+                    <option value="antiguo">Más antiguos</option>
+                    <option value="reciente">Más recientes</option>
+
+                </select>
+
+                <ul id="lista-elizabeth" class="lista-dashboard"></ul>
+            </div>
+
+            <div class="persona-panel panel-jaso">
+                <div class="persona-header">
+                    <h3>Ing. Juan Carlos Rodriguez Jasso</h3>
+                    <span>Supervisión</span>
+                </div>
+
+                <select
+                    id="filtroJaso"
+                    class="form-control mb-3">
+
+                    <option value="normal">Orden normal</option>
+                    <option value="antiguo">Más antiguos</option>
+                    <option value="reciente">Más recientes</option>
+
+                </select>
+
+                <ul id="lista-jaso" class="lista-dashboard"></ul>
+            </div>
+
+            <div class="persona-panel panel-enrique">
+                <div class="persona-header">
+                    <h3>Ing. Luis Enrique Arredondo Facio</h3>
+                    <span>Administración</span>
+                </div>
+
+                <select
+                    id="filtroEnrique"
+                    class="form-control mb-3">
+
+                    <option value="normal">Orden normal</option>
+                    <option value="antiguo">Más antiguos</option>
+                    <option value="reciente">Más recientes</option>
+
+                </select>
+
+                <ul id="lista-enrique" class="lista-dashboard"></ul>
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const modoSistema = window.matchMedia('(prefers-color-scheme: dark)');
+
+    function aplicarModoAutomatico() {
+        if (modoSistema.matches) {
+            document.body.classList.remove("modo-claro");
+        } else {
+            document.body.classList.add("modo-claro");
+        }
+    }
+
+    aplicarModoAutomatico();
+    modoSistema.addEventListener("change", aplicarModoAutomatico);
+
+    const buscador =
+        document.getElementById("buscadorPendientes");
+        if(buscador){
+    buscador.value = "";
+}
+
+    if(localStorage.getItem("modoDashboard") === "claro"){
+        document.body.classList.add("modo-claro");
+    }
+
+    function actualizarHora(){
+        const ahora = new Date();
+
+        document.getElementById("fechaHoraActual").innerText =
+            ahora.toLocaleDateString("es-MX", {
+                day:"2-digit",
+                month:"long",
+                year:"numeric"
+            }) + " · " +
+            ahora.toLocaleTimeString("es-MX", {
+                hour:"2-digit",
+                minute:"2-digit"
+            });
+    }
+
+    actualizarHora();
+    setInterval(actualizarHora, 1000);
+    setTimeout(() => {
+
+    const pantalla =
+        document.getElementById("pantallaCarga");
+
+    if(pantalla){
+
+        pantalla.style.opacity = "0";
+
+        setTimeout(() => {
+
+            pantalla.style.display = "none";
+
+        }, 600);
+
+    }
+
+}, 3000);
+
+    window.toggleMenuIA = function(){
+
+        const panel = document.getElementById("menuIAPanel");
+        const boton = document.getElementById("menuIAToggle");
+
+        if(panel){
+            panel.classList.toggle("activo");
+        }
+
+        if(boton){
+            boton.classList.toggle("activo");
+        }
+
+    }
+
+    window.cerrarMenuIA = function(){
+
+        const panel = document.getElementById("menuIAPanel");
+        const boton = document.getElementById("menuIAToggle");
+
+        if(panel){
+            panel.classList.remove("activo");
+        }
+
+        if(boton){
+            boton.classList.remove("activo");
+        }
+
+    }
+
+
+    window.cambiarModoDashboard = function(){
+
+        document.body.classList.add("cambiando-tema");
+
+        setTimeout(() => {
+            document.body.classList.remove("cambiando-tema");
+        }, 700);
+
+        document.body.classList.toggle("modo-claro");
+
+        if(document.body.classList.contains("modo-claro")){
+            localStorage.setItem("modoDashboard","claro");
+        }else{
+            localStorage.setItem("modoDashboard","oscuro");
+        }
+    }
+
+    function mostrarNotificacion(mensaje) {
+
+        const contenedor =
+            document.getElementById("notificaciones");
+
+        const notificacion =
+            document.createElement("div");
+
+        notificacion.className = "toast-custom";
+        notificacion.innerHTML = mensaje;
+
+        contenedor.appendChild(notificacion);
+
+        setTimeout(() => {
+            notificacion.remove();
+        }, 3500);
+    }
+
+    window.mostrarNotificacion = mostrarNotificacion;
+
+    function reproducirSonido(tipo){
+
+        try{
+            const audioCtx =
+                new (window.AudioContext || window.webkitAudioContext)();
+
+            const osc =
+                audioCtx.createOscillator();
+
+            const gain =
+                audioCtx.createGain();
+
+            const frecuencias = {
+                agregar:520,
+                finalizar:720,
+                urgente:220,
+                deshacer:420,
+                cambio:600
+            };
+
+            osc.frequency.value =
+                frecuencias[tipo] || 500;
+
+            osc.type = "sine";
+
+            gain.gain.setValueAtTime(0.06, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.22);
+
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.22);
+        }catch(e){}
+    }
+
+    
+function guardarBitacora(mensaje, usuario){
+
+        const usuarioBitacora =
+            usuario || sessionStorage.getItem("usuarioSesionActual") || "Sistema";
+
+        let bitacora =
+            JSON.parse(localStorage.getItem("bitacoraPendientes")) || [];
+
+        const movimiento = {
+            mensaje:mensaje,
+            usuario:usuarioBitacora,
+            fecha:Date.now()
+        };
+
+        bitacora.unshift(movimiento);
+        bitacora = bitacora.slice(0,20);
+
+        localStorage.setItem("bitacoraPendientes", JSON.stringify(bitacora));
+
+        let historial =
+            JSON.parse(localStorage.getItem("historialMovimientosIndex")) || [];
+
+        historial.unshift(movimiento);
+        historial = historial.slice(0,500);
+
+        localStorage.setItem("historialMovimientosIndex", JSON.stringify(historial));
+
+        renderizarBitacora();
+
+    }
+
+    function renderizarBitacora(){
+
+        const lista =
+            document.getElementById("bitacoraLista");
+
+        if(!lista){
+            return;
+        }
+
+        let bitacora =
+            JSON.parse(localStorage.getItem("bitacoraPendientes")) || [];
+
+        if(bitacora.length === 0){
+            lista.innerHTML = `
+                <div class="bitacora-item">
+                    Sistema listo
+                    <small>Esperando actividad...</small>
+                </div>
+            `;
+            return;
+        }
+
+        lista.innerHTML = "";
+
+        bitacora.slice(0,20).forEach(item => {
+
+            const fecha =
+                new Date(item.fecha);
+
+            lista.innerHTML += `
+                <div class="bitacora-item">
+                    <strong>${item.usuario}</strong> ${item.mensaje}
+                    <small>${fecha.toLocaleDateString("es-MX")} · ${fecha.toLocaleTimeString("es-MX",{hour:"2-digit",minute:"2-digit"})}</small>
+                </div>
+            `;
+
+        });
+
+    }
+
+    function formatearTiempo(ms){
+
+        if(!ms){
+            return "Sin actividad";
+        }
+
+        const minutos =
+            Math.floor(ms / 60000);
+
+        if(minutos < 1){
+            return "hace unos segundos";
+        }
+
+        if(minutos === 1){
+            return "hace 1 min";
+        }
+
+        if(minutos < 60){
+            return "hace " + minutos + " min";
+        }
+
+        const horas =
+            Math.floor(minutos / 60);
+
+        return "hace " + horas + " h";
+    }
+
+    
+function limpiarUsuariosActivosExpirados(){
+
+    let usuariosActivos =
+        JSON.parse(localStorage.getItem("usuariosActivos")) || {};
+
+    const ahora = Date.now();
+    const limiteActivo = 15000;
+
+    Object.keys(usuariosActivos).forEach(usuario => {
+        if(!usuariosActivos[usuario] || ahora - usuariosActivos[usuario] > limiteActivo){
+            delete usuariosActivos[usuario];
+        }
+    });
+
+    localStorage.setItem(
+        "usuariosActivos",
+        JSON.stringify(usuariosActivos)
+    );
+
+}
+
+function renderizarUsuariosActivosPanel(){
+
+        limpiarUsuariosActivosExpirados();
+
+        const panel =
+            document.getElementById("usuariosActivosPanel");
+
+        if(!panel){
+            return;
+        }
+
+        const usuariosActivos =
+            JSON.parse(localStorage.getItem("usuariosActivos")) || {};
+
+        const pendientes =
+            JSON.parse(localStorage.getItem("pendientes")) || [];
+
+        const ahora =
+            Date.now();
+
+        const limiteActivo =
+            15000;
+
+        const datosUsuarios = {
+            Elizabeth:"assets/img/Equipo/2.jpg",
+            Jaso:"assets/img/Equipo/3.jpg",
+            Enrique:"assets/img/Equipo/1.jpg"
+        };
+
+        panel.innerHTML = "";
+
+        Object.keys(datosUsuarios).forEach(usuario => {
+
+            const ultimo =
+                usuariosActivos[usuario];
+
+            const activo =
+                ultimo && ahora - ultimo < limiteActivo;
+
+            const activosUsuario =
+                pendientes.filter(p =>
+                    p.usuario === usuario &&
+                    p.finalizado !== true &&
+                    p.estado !== "finalizado"
+                ).length;
+
+            panel.innerHTML += `
+                <div class="usuario-activo-card ${activo ? "activo" : ""}">
+                    <img src="${datosUsuarios[usuario]}" alt="${usuario}">
+                    <div>
+                        <h4>${usuario}</h4>
+                        <p>${activo ? "Trabajando " + formatearTiempo(ahora - ultimo) : "Desconectado"}</p>
+                        <p>📌 ${activosUsuario} pendiente(s) activos</p>
+                    </div>
+                    <span class="estado-circulo"></span>
+                </div>
+            `;
+
+        });
+
+    }
+
+    function renderizarKanban(){
+
+        const contenedores = {
+            pendiente:document.getElementById("kanban-pendiente"),
+            proceso:document.getElementById("kanban-proceso"),
+            finalizado:document.getElementById("kanban-finalizado")
+        };
+
+        if(!contenedores.pendiente || !contenedores.proceso || !contenedores.finalizado){
+            return;
+        }
+
+        Object.values(contenedores).forEach(c => c.innerHTML = "");
+
+        let pendientes =
+            JSON.parse(localStorage.getItem("pendientes")) || [];
+
+        pendientes.forEach(p => {
+
+            const estado =
+                obtenerEstadoPendiente(p);
+
+            const estadoKanban =
+                estado === "finalizado"
+                ? "finalizado"
+                : estado === "proceso"
+                ? "proceso"
+                : "pendiente";
+
+            const clase =
+                estado === "urgente" ||
+                String(p.pendiente || "").toLowerCase().includes("urgente")
+                ? "urgente"
+                : estadoKanban;
+
+            const destino =
+                contenedores[estadoKanban];
+
+            if(destino){
+
+                destino.innerHTML += `
+                    <div class="kanban-card ${clase}"  data-id="${p.id}">
+                        
+                       <div class="kanban-card ${clase}" data-id="${p.id}">
+
+    <strong>
+        🆔 Folio #${String(p.folio || 0).padStart(4,"0")}
+    </strong>
+
+    <strong style="margin-top:8px;">
+        ${p.pendiente}
+    </strong>
+
+    ${
+        p.asignadoPor
+        ?
+        `<small class="badge-asignado">
+            Asignado por: Lic. ${p.asignadoPor}
+        </small>`
+        :
+        ""
+    }
+
+    <small>
+        👤 ${p.usuario}
+        ·
+        📅 ${p.fecha || "Sin fecha"}
+        ·
+        ⏰ ${p.hora || "Sin hora"}
+    </small>
+
+</div>
+                    </div>
+                `;
+
+            }
+
+        });
+
+
+
+    }
+
+    function activarDragKanban(){
+
+        return;
+
+    }
+
+    function actualizarPanelesVivos(){
+
+        renderizarUsuariosActivosPanel();
+        renderizarKanban();
+
+    }
+
+
+
+    window.abrirMenuUsuarios = function(){
+
+        const menuUsuarios =
+            document.getElementById("usuarioNavbarMenu");
+
+        if(menuUsuarios){
+            menuUsuarios.classList.toggle("activo");
+        }
+
+    }
+
+    window.seleccionarUsuario = function(usuario){
+
+        sessionStorage.setItem("usuarioSesionActual", usuario);
+
+        /*
+            No guardamos usuarioRecordadoSistema como usuario activo,
+            porque localStorage se comparte entre pestañas.
+        */
+
+        localStorage.setItem(
+            "ultimaSesion_" + usuario,
+            "activa"
+        );
+
+        let usuariosActivos =
+            JSON.parse(localStorage.getItem("usuariosActivos")) || {};
+
+        usuariosActivos[usuario] = Date.now();
+
+        localStorage.setItem(
+            "usuariosActivos",
+            JSON.stringify(usuariosActivos)
+        );
+
+        actualizarUsuariosNavbar();
+
+        const menuUsuarios =
+            document.getElementById("usuarioNavbarMenu");
+
+        if(menuUsuarios){
+            menuUsuarios.classList.remove("activo");
+        }
+
+        mostrarNotificacion("🟢 Usuario seleccionado: " + usuario);
+    }
+
+   window.cerrarSesionUsuario = function(){
+
+        let usuario =
+            sessionStorage.getItem("usuarioSesionActual");
+
+        if(usuario){
+
+            let usuariosActivos =
+                JSON.parse(localStorage.getItem("usuariosActivos")) || {};
+
+            delete usuariosActivos[usuario];
+
+            localStorage.setItem(
+                "usuariosActivos",
+                JSON.stringify(usuariosActivos)
+            );
+
+        }
+
+        sessionStorage.removeItem("usuarioSesionActual");
+        sessionStorage.removeItem("idUsuario");
+sessionStorage.removeItem("nombreUsuario");
+sessionStorage.removeItem("correoUsuario");
+sessionStorage.removeItem("rolUsuario");
+
+        localStorage.removeItem(
+            "ultimaSesion_" + usuario
+        );
+
+        localStorage.removeItem(
+            "usuarioRecordadoSistema"
+        );
+        localStorage.setItem(
+            "sesionCerrada",
+            "true"
+        );
+
+        actualizarUsuariosNavbar();
+
+        const menuUsuarios =
+            document.getElementById("usuarioNavbarMenu");
+
+        if(menuUsuarios){
+            menuUsuarios.classList.remove("activo");
+        }
+
+        const loginOverlay =
+            document.getElementById("loginOverlay");
+
+        const passwordLogin =
+            document.getElementById("passwordLogin");
+
+        const mensajeLogin =
+            document.getElementById("mensajeLogin");
+
+        const usuarioSeleccionado =
+            document.getElementById("usuarioSeleccionado");
+
+        if(usuarioSeleccionado){
+            usuarioSeleccionado.value = "";
+        }
+
+        if(passwordLogin){
+            passwordLogin.value = "";
+        }
+
+        if(mensajeLogin){
+            mensajeLogin.innerText = "";
+        }
+
+        if(loginOverlay){
+            loginOverlay.style.display = "flex";
+        }
+
+        if(typeof guardarBitacora === "function"){
+            guardarBitacora("cerró sesión", usuario || "Sistema");
+        }
+
+        mostrarNotificacion("🔴 Sesión cerrada");
+
+    }
+
+    function mantenerSesionActiva(){
+
+/* ========================= */
+/* TEMPORIZADOR TABLERO ESTADOS */
+/* LIMPIA FINALIZADOS CADA 10 MIN */
+/* ========================= */
+
+let tiempoTableroEstados = 10 * 60;
+
+function actualizarTemporizadorTableroEstados(){
+
+    const contador =
+        document.getElementById("contadorTableroEstados");
+
+    let pendientes =
+        JSON.parse(localStorage.getItem("pendientes")) || [];
+
+    let finalizados =
+        pendientes.filter(p =>
+            p.finalizado === true ||
+            p.estado === "finalizado"
+        );
+
+    if(finalizados.length === 0){
+
+        tiempoTableroEstados = 10 * 60;
+
+        if(contador){
+            contador.innerText = "⏸️ Sin finalizados";
+        }
+
+        return;
+    }
+
+    let minutos =
+        Math.floor(tiempoTableroEstados / 60);
+
+    let segundos =
+        tiempoTableroEstados % 60;
+
+    if(contador){
+        contador.innerText =
+            "🧹 Limpieza de finalizados en " +
+            String(minutos).padStart(2,"0") +
+            ":" +
+            String(segundos).padStart(2,"0");
+    }
+
+    if(tiempoTableroEstados <= 0){
+
+        let pendientesActivos =
+            pendientes.filter(p =>
+                p.finalizado !== true &&
+                p.estado !== "finalizado"
+            );
+
+        localStorage.setItem(
+            "pendientes",
+            JSON.stringify(pendientesActivos)
+        );
+
+        tiempoTableroEstados = 10 * 60;
+
+        if(typeof cargarPendientes === "function"){
+            cargarPendientes();
+        }
+
+        if(typeof renderizarKanban === "function"){
+            renderizarKanban();
+        }
+
+        if(contador){
+            contador.innerText = "⏸️ Sin finalizados";
+        }
+
+        return;
+    }
+
+    tiempoTableroEstados--;
+}
+
+//setInterval(actualizarTemporizadorTableroEstados, 1000);
+        
+        let usuario =
+            sessionStorage.getItem("usuarioSesionActual");
+
+        if(!usuario){
+            return;
+        }
+
+        let usuariosActivos =
+            JSON.parse(localStorage.getItem("usuariosActivos")) || {};
+
+        usuariosActivos[usuario] = Date.now();
+
+        localStorage.setItem(
+            "usuariosActivos",
+            JSON.stringify(usuariosActivos)
+        );
+
+        actualizarUsuariosNavbar();
+    }
+
+    function actualizarUsuariosNavbar(){
+
+        limpiarUsuariosActivosExpirados();
+
+        const usuarioActual =
+            sessionStorage.getItem("usuarioSesionActual");
+
+        const usuariosActivos =
+            JSON.parse(localStorage.getItem("usuariosActivos")) || {};
+
+        const ahora = Date.now();
+
+        const limiteActivo = 15000;
+
+        const datosUsuarios = {
+            Elizabeth:{
+                img:"assets/img/Equipo/2.jpg",
+                texto:"Elizabeth",
+                estado:"estadoTextoElizabeth",
+                punto:"estado-elizabeth"
+            },
+            Jaso:{
+                img:"assets/img/Equipo/3.jpg",
+                texto:"Jaso",
+                estado:"estadoTextoJaso",
+                punto:"estado-jaso"
+            },
+            Enrique:{
+                img:"assets/img/Equipo/1.jpg",
+                texto:"Enrique",
+                estado:"estadoTextoEnrique",
+                punto:"estado-enrique"
+            }
+        };
+
+        document.querySelectorAll(".estado-mini").forEach(punto => {
+            punto.classList.remove("activo");
+        });
+
+        Object.keys(datosUsuarios).forEach(nombre => {
+
+            const datos = datosUsuarios[nombre];
+
+            const estaActivo =
+                usuariosActivos[nombre] &&
+                ahora - usuariosActivos[nombre] < limiteActivo;
+
+            const estadoTexto =
+                document.getElementById(datos.estado);
+
+            const punto =
+                document.querySelector("." + datos.punto);
+
+            if(estadoTexto && punto){
+                if(estaActivo){
+                    estadoTexto.innerText = "Activo ahora";
+                    punto.classList.add("activo");
+                }else{
+                    estadoTexto.innerText = "Desconectado";
+                }
+            }
+
+        });
+
+        const usuarioNavbarImagen =
+            document.getElementById("usuarioNavbarImagen");
+
+        const usuarioNavbarTexto =
+            document.getElementById("usuarioNavbarTexto");
+
+        const usuarioActualTexto =
+            document.getElementById("usuarioActualTexto");
+
+        const usuarioActualTextoHero =
+            document.getElementById("usuarioActualTextoHero");
+
+        if(usuarioActual && datosUsuarios[usuarioActual]){
+
+            if(usuarioNavbarImagen){
+                usuarioNavbarImagen.src =
+                    datosUsuarios[usuarioActual].img;
+            }
+
+            if(usuarioNavbarTexto){
+                usuarioNavbarTexto.innerText =
+                    datosUsuarios[usuarioActual].texto;
+            }
+
+            if(usuarioActualTexto){
+                usuarioActualTexto.innerText =
+                    datosUsuarios[usuarioActual].texto;
+            }
+
+            if(usuarioActualTextoHero){
+                usuarioActualTextoHero.innerText =
+                    datosUsuarios[usuarioActual].texto;
+            }
+
+        }else{
+
+            if(usuarioNavbarImagen){
+                usuarioNavbarImagen.src =
+                    "assets/img/Equipo/2.jpg";
+            }
+
+            if(usuarioNavbarTexto){
+                usuarioNavbarTexto.innerText =
+                    "Elegir usuario";
+            }
+
+            if(usuarioActualTexto){
+                usuarioActualTexto.innerText =
+                    "Ningún usuario seleccionado";
+            }
+
+            if(usuarioActualTextoHero){
+                usuarioActualTextoHero.innerText =
+                    "Ningún usuario seleccionado";
+            }
+        }
+    }
+
+    window.actualizarUsuariosNavbar = actualizarUsuariosNavbar;
+
+    actualizarUsuariosNavbar();
+    mantenerSesionActiva();
+    setInterval(mantenerSesionActiva, 10000);
+    setInterval(actualizarUsuariosNavbar, 5000);
+
+    document.addEventListener("click", function(event){
+
+        const picker =
+            document.querySelector(".usuario-navbar-picker");
+
+        if(picker && !picker.contains(event.target)){
+            document
+            .getElementById("usuarioNavbarMenu")
+            .classList.remove("activo");
+        }
+
+    });
+
+
+
+    document.addEventListener("click", function(event){
+
+        const menuIA = document.querySelector(".menu-ia-wrapper");
+
+        if(menuIA && !menuIA.contains(event.target)){
+            cerrarMenuIA();
+        }
+
+    });
+
+
+    
+function obtenerUsuarioActivoSeguro(){
+
+    /*
+        Usuario activo REAL:
+        solo se toma de sessionStorage porque localStorage se comparte
+        entre pestañas y puede dejar activo a otro usuario.
+    */
+
+    return sessionStorage.getItem("usuarioSesionActual") || "";
+
+}
+
+function puedeModificarPendienteIndex(pendiente){
+
+    const usuarioActivo =
+        obtenerUsuarioActivoSeguro();
+
+    if(!usuarioActivo){
+        alert("Primero inicia sesión o selecciona un usuario activo.");
+        return false;
+    }
+
+    if(!pendiente){
+        alert("No se encontró el pendiente.");
+        return false;
+    }
+
+    if(pendiente.usuario !== usuarioActivo){
+        alert(
+            "No puedes modificar este pendiente porque pertenece a " +
+            pendiente.usuario +
+            ". Usuario activo: " +
+            usuarioActivo
+        );
+        return false;
+    }
+
+    return true;
+
+}
+
+
+function cargarPendientes() {
+
+        let pendientes =
+            JSON.parse(localStorage.getItem("pendientes")) || [];
+
+        function limpiarTexto(texto){
+
+            return String(texto || "")
+                .toLowerCase()
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+                .trim();
+        }
+
+        let textoBusqueda =
+            limpiarTexto(buscador ? buscador.value : "");
+
+        const filtroEstadoGeneral =
+            document.getElementById("filtroEstadoGeneral");
+
+        const estadoSeleccionado =
+            filtroEstadoGeneral ? filtroEstadoGeneral.value : "todos";
+
+        let pendientesFiltrados =
+            pendientes.filter(p => {
+
+                let nombreUsuario = "";
+
+                if(p.usuario === "Elizabeth"){
+                    nombreUsuario =
+                    "lic elizabeth credito operativo";
+                }
+
+                if(p.usuario === "Jaso"){
+                    nombreUsuario =
+                    "lic jaso supervision asuntos consultivos";
+                }
+
+                if(p.usuario === "Enrique"){
+                    nombreUsuario =
+                    "lic enrique administracion";
+                }
+
+                let textoCompleto =
+                    limpiarTexto(`
+
+                        ${p.pendiente}
+                        ${p.usuario}
+                        ${nombreUsuario}
+                        ${p.fecha}
+                        ${p.hora}
+                        ${p.prioridad}
+                        ${p.finalizado
+                            ? "finalizado completado"
+                            : "activo pendiente"}
+
+                    `);
+                let estadoReal =
+                    obtenerEstadoPendiente(p);
+
+                let coincideEstado =
+                    estadoSeleccionado === "todos" ||
+                    estadoReal === estadoSeleccionado;
+
+                return textoCompleto.includes(textoBusqueda) && coincideEstado;
+
+            });
+
+        let listaElizabeth =
+            document.getElementById("lista-elizabeth");
+
+        let listaJaso =
+            document.getElementById("lista-jaso");
+
+        let listaEnrique =
+            document.getElementById("lista-enrique");
+
+        listaElizabeth.innerHTML = "";
+        listaJaso.innerHTML = "";
+        listaEnrique.innerHTML = "";
+
+        let elizabeth =
+            pendientesFiltrados.filter(
+                p => p.usuario === "Elizabeth"
+            );
+
+        let jaso =
+            pendientesFiltrados.filter(
+                p => p.usuario === "Jaso"
+            );
+
+        let enrique =
+            pendientesFiltrados.filter(
+                p => p.usuario === "Enrique"
+            );
+
+        ordenarPendientesPorFiltro(elizabeth, "filtroElizabeth");
+        ordenarPendientesPorFiltro(jaso, "filtroJaso");
+        ordenarPendientesPorFiltro(enrique, "filtroEnrique");
+
+        mostrarLista(elizabeth, listaElizabeth);
+        mostrarLista(jaso, listaJaso);
+        mostrarLista(enrique, listaEnrique);
+
+        actualizarContadores(pendientes);
+        actualizarActividad(pendientes);
+        revisarUrgentes(pendientes);
+        renderizarUsuariosActivosPanel();
+        renderizarKanban();
+
+    }
+
+    function ordenarPendientesPorFiltro(lista, filtroId){
+
+        const filtro =
+            document.getElementById(filtroId);
+
+        if(!filtro){
+            return;
+        }
+
+        if(filtro.value === "antiguo"){
+            lista.sort((a,b) => a.id - b.id);
+        }
+
+        if(filtro.value === "reciente"){
+            lista.sort((a,b) => b.id - a.id);
+        }
+
+    }
+
+    function obtenerEstadoPendiente(p){
+
+        if(!p){
+            return "pendiente";
+        }
+
+        const textoPendiente =
+            String(p.pendiente || "").toLowerCase();
+
+        const estadoGuardado =
+            String(p.estado || "").toLowerCase();
+
+        const prioridadGuardada =
+            String(p.prioridad || "").toLowerCase();
+
+        if(p.finalizado === true || estadoGuardado === "finalizado"){
+            return "finalizado";
+        }
+
+        if(
+            estadoGuardado === "urgente" ||
+            prioridadGuardada.includes("urgente") ||
+            prioridadGuardada === "alta" ||
+            textoPendiente.includes("urgente")
+        ){
+            return "urgente";
+        }
+
+        if(estadoGuardado === "proceso"){
+            return "proceso";
+        }
+
+        return "pendiente";
+
+    }
+
+    function textoEstadoPendiente(estado){
+
+        if(estado === "proceso"){
+            return "En proceso";
+        }
+
+        if(estado === "urgente"){
+            return "Urgente";
+        }
+
+        if(estado === "finalizado"){
+            return "Finalizado";
+        }
+
+        return "Pendiente";
+
+    }
+
+    function claseEstadoPendiente(estado){
+
+        if(estado === "proceso"){
+            return "estado-proceso";
+        }
+
+        if(estado === "urgente"){
+            return "estado-urgente";
+        }
+
+        if(estado === "finalizado"){
+            return "estado-finalizado";
+        }
+
+        return "estado-pendiente";
+
+    }
+
+    function mostrarLista(datos, lista) {
+
+        if(datos.length === 0){
+
+            lista.innerHTML = `
+                <li class="pendiente-card vacio">
+                    Sin pendientes registrados
+                </li>
+            `;
+
+            return;
+        }
+
+        datos.forEach(p => {
+
+            let estadoReal =
+                obtenerEstadoPendiente(p);
+
+            let claseEstado =
+                claseEstadoPendiente(estadoReal);
+
+            let textoEstado =
+                textoEstadoPendiente(estadoReal);
+
+            let texto = p.pendiente;
+
+            if(estadoReal === "finalizado"){
+                texto = "✅ FINALIZADO - " + p.pendiente;
+            }
+
+            if(estadoReal === "urgente"){
+                texto = "🚨 URGENTE - " + p.pendiente;
+            }
+
+            const usuarioActivo =
+                obtenerUsuarioActivoSeguro();
+
+            const puedeEditar =
+                usuarioActivo &&
+                p.usuario === usuarioActivo &&
+                estadoReal !== "finalizado";
+
+            lista.innerHTML += `
+                <li class="pendiente-card ${claseEstado}">
+                    <div>
+
+                        <div class="folio-pendiente">
+                            🆔 Folio #${String(p.folio || 0).padStart(4,"0")}
+                         </div>
+<h5>📝 ${texto}</h5>
+
+${p.asignadoPor ? `
+<p style="margin:6px 0;font-weight:bold;color:#00c6ff;">
+    👤 Asignado por: Lic. ${p.asignadoPor}
+</p>
+` : ""}
+
+<p>
+    📅 ${p.fecha || "Sin fecha"}
+    <br>
+    ⏰ ${p.hora || "Sin hora"}
+
+                        <select
+                            class="estado-select-mini"
+                            onchange="event.stopPropagation(); cambiarEstadoPendiente(${p.id}, this.value)"
+                            ${puedeEditar ? "" : "disabled"}>
+
+                            <option value="pendiente" ${estadoReal === "pendiente" ? "selected" : ""}>Pendiente</option>
+                            <option value="proceso" ${estadoReal === "proceso" ? "selected" : ""}>En proceso</option>
+                            <option value="urgente" ${estadoReal === "urgente" ? "selected" : ""}>Urgente</option>
+
+                        </select>
+                    </div>
+
+                    <button
+                        type="button"
+                        class="btn btn-success btn-sm"
+                        onclick="event.stopPropagation(); finalizarPendiente(${p.id})"
+                        ${puedeEditar ? "" : "disabled"}>
+
+                        ${estadoReal === "finalizado"
+                            ? "Finalizado"
+                            : "Finalizar"}
+
+                    </button>
+                </li>
+            `;
+
+        });
+
+    }
+
+    function actualizarContadores(pendientes) {
+
+        /*
+            BARRA DE PROGRESO CONECTADA AL PIZARRÓN
+            Se calcula con todos los pendientes guardados en localStorage.
+        */
+
+        pendientes =
+            Array.isArray(pendientes)
+            ? pendientes
+            : [];
+
+        let total =
+            pendientes.length;
+
+        let finalizados =
+            pendientes.filter(p =>
+                p &&
+                (
+                    p.finalizado === true ||
+                    String(p.estado || "").toLowerCase() === "finalizado"
+                )
+            ).length;
+
+        let activos =
+            pendientes.filter(p =>
+                p &&
+                p.finalizado !== true &&
+                String(p.estado || "").toLowerCase() !== "finalizado"
+            ).length;
+
+        let urgentes =
+            pendientes.filter(p => {
+
+                if(!p){
+                    return false;
+                }
+
+                const estado =
+                    String(p.estado || "").toLowerCase();
+
+                const prioridad =
+                    String(p.prioridad || "").toLowerCase();
+
+                const texto =
+                    String(p.pendiente || "").toLowerCase();
+
+                return (
+                    p.finalizado !== true &&
+                    estado !== "finalizado" &&
+                    (
+                        estado === "urgente" ||
+                        prioridad.includes("urgente") ||
+                        prioridad === "alta" ||
+                        texto.includes("urgente")
+                    )
+                );
+
+            }).length;
+
+        const porcentaje =
+            total > 0
+            ? Math.round((finalizados / total) * 100)
+            : 0;
+
+        const totalPendientes =
+            document.getElementById("totalPendientes");
+
+        const totalActivos =
+            document.getElementById("totalActivos");
+
+        const totalFinalizados =
+            document.getElementById("totalFinalizados");
+
+        const heroActivos =
+            document.getElementById("heroActivos");
+
+        const heroFinalizados =
+            document.getElementById("heroFinalizados");
+
+        const heroUrgentes =
+            document.getElementById("heroUrgentes");
+
+        const barra =
+            document.getElementById("barraProgreso");
+
+        const textoProgreso =
+            document.getElementById("textoProgreso");
+
+        const heroHora =
+            document.getElementById("heroHora");
+
+        const heroActividad =
+            document.getElementById("heroActividad");
+
+        if(totalPendientes){
+            totalPendientes.innerText = total;
+        }
+
+        if(totalActivos){
+            totalActivos.innerText = activos;
+        }
+
+        if(totalFinalizados){
+            totalFinalizados.innerText = finalizados;
+        }
+
+        if(heroActivos){
+            heroActivos.innerText = activos;
+        }
+
+        if(heroFinalizados){
+            heroFinalizados.innerText = finalizados;
+        }
+
+        if(heroUrgentes){
+            heroUrgentes.innerText = urgentes;
+        }
+
+        if(barra){
+            barra.style.width = porcentaje + "%";
+        }
+
+        if(textoProgreso){
+            textoProgreso.innerText = porcentaje + "% completado";
+        }
+
+        if(heroHora){
+            heroHora.innerText =
+                new Date().toLocaleTimeString("es-MX", {
+                    hour:"2-digit",
+                    minute:"2-digit"
+                });
+        }
+
+        if(heroActividad){
+
+            if(urgentes > 0){
+                heroActividad.innerText =
+                    `📢 ⚠️ Hay ${urgentes} pendiente(s) urgente(s)`;
+            }else if(activos > 0){
+                heroActividad.innerText =
+                    `📌 Hay ${activos} pendiente(s) activo(s)`;
+            }else if(total > 0){
+                heroActividad.innerText =
+                    "✅ Todo el equipo está al día";
+            }else{
+                heroActividad.innerText =
+                    "Esperando actividad...";
+            }
+
+        }
+
+    }
+
+    function actualizarActividad(pendientes){
+
+        let actividad =
+            document.getElementById("actividadTexto");
+
+        let activos =
+            pendientes.filter(p => p.finalizado !== true && p.estado !== "finalizado");
+
+        let urgentes =
+            activos.filter(p =>
+                String(p.pendiente || "").toLowerCase().includes("urgente")
+            );
+
+        if(pendientes.length === 0){
+            actividad.innerText =
+                "Aún no hay actividad registrada en el sistema.";
+            return;
+        }
+
+        if(urgentes.length > 0){
+            actividad.innerText =
+                `⚠️ Hay ${urgentes.length} pendiente(s) urgente(s) que requieren atención.`;
+            return;
+        }
+
+        if(activos.length > 0){
+            actividad.innerText =
+                `📌 Hay ${activos.length} pendiente(s) activos en seguimiento.`;
+            return;
+        }
+
+        actividad.innerText =
+            "✅ Todos los pendientes están finalizados.";
+    }
+
+    function revisarUrgentes(pendientes) {
+
+        const usuarios = ["Elizabeth", "Jaso", "Enrique"];
+
+        usuarios.forEach(usuario => {
+
+            let urgentes =
+                pendientes.filter(p =>
+                    p.usuario === usuario &&
+                    p.finalizado !== true &&
+                    String(p.pendiente || "").toLowerCase().includes("urgente")
+                ).length;
+
+            if(urgentes >= 3){
+                mostrarNotificacion(`⚠️ ${usuario} tiene ${urgentes} pendientes urgentes`);
+            }
+
+        });
+
+    }
+
+    let ultimoCambioPendiente = null;
+
+    window.finalizarPendiente = function(id) {
+
+        let pendientes =
+            JSON.parse(localStorage.getItem("pendientes")) || [];
+
+        const pendienteEncontrado =
+            pendientes.find(p => p.id === id);
+
+        if(!puedeModificarPendienteIndex(pendienteEncontrado)){
+            cargarPendientes();
+            return;
+        }
+
+        let confirmar =
+            confirm("¿Seguro que quieres finalizar este pendiente?");
+
+        if(!confirmar){
+            return;
+        }
+
+        pendientes = pendientes.map(p => {
+
+            if(p.id === id){
+
+                ultimoCambioPendiente = {
+                    id:p.id,
+                    estadoAnterior:p.estado || "pendiente",
+                    finalizadoAnterior:p.finalizado === true
+                };
+
+                p.finalizado = true;
+                p.estado = "finalizado";
+
+            }
+
+            return p;
+
+        });
+
+        localStorage.setItem(
+            "pendientes",
+            JSON.stringify(pendientes)
+        );
+
+        guardarBitacora("finalizó un pendiente", sessionStorage.getItem("usuarioSesionActual"));
+        reproducirSonido("finalizar");
+        mostrarDeshacer("✅ Pendiente finalizado");
+
+        cargarPendientes();
+
+    }
+
+    window.cambiarEstadoPendiente = function(id, nuevoEstado){
+
+        let pendientes =
+            JSON.parse(localStorage.getItem("pendientes")) || [];
+
+        const pendienteEncontrado =
+            pendientes.find(p => p.id === id);
+
+        if(!puedeModificarPendienteIndex(pendienteEncontrado)){
+            cargarPendientes();
+            return;
+        }
+
+        pendientes = pendientes.map(p => {
+
+            if(p.id === id){
+
+                ultimoCambioPendiente = {
+                    id:p.id,
+                    estadoAnterior:p.estado || "pendiente",
+                    finalizadoAnterior:p.finalizado === true
+                };
+
+                p.estado = nuevoEstado;
+                p.finalizado = nuevoEstado === "finalizado";
+
+            }
+
+            return p;
+
+        });
+
+        localStorage.setItem(
+            "pendientes",
+            JSON.stringify(pendientes)
+        );
+
+        guardarBitacora(
+            "cambió un pendiente a " + textoEstadoPendiente(nuevoEstado),
+            sessionStorage.getItem("usuarioSesionActual")
+        );
+
+        reproducirSonido(nuevoEstado === "urgente" ? "urgente" : "cambio");
+        mostrarDeshacer("🔄 Estado actualizado");
+
+        cargarPendientes();
+
+    }
+
+    window.deshacerUltimoCambio = function(){
+
+        if(!ultimoCambioPendiente){
+            mostrarNotificacion("No hay cambios para deshacer");
+            return;
+        }
+
+        let pendientes =
+            JSON.parse(localStorage.getItem("pendientes")) || [];
+
+        pendientes = pendientes.map(p => {
+
+            if(p.id === ultimoCambioPendiente.id){
+
+                p.estado = ultimoCambioPendiente.estadoAnterior;
+                p.finalizado = ultimoCambioPendiente.finalizadoAnterior;
+
+            }
+
+            return p;
+
+        });
+
+        localStorage.setItem(
+            "pendientes",
+            JSON.stringify(pendientes)
+        );
+
+        ultimoCambioPendiente = null;
+
+        cargarPendientes();
+
+        guardarBitacora("deshizo un cambio", sessionStorage.getItem("usuarioSesionActual"));
+        reproducirSonido("deshacer");
+        mostrarNotificacion("↩️ Cambio deshecho");
+
+    }
+
+    function mostrarDeshacer(mensaje){
+
+        const contenedor =
+            document.getElementById("notificaciones");
+
+        const notificacion =
+            document.createElement("div");
+
+        notificacion.className = "deshacer-toast";
+
+        notificacion.innerHTML = `
+            <strong>${mensaje}</strong>
+            <br>
+            <small>Puedes deshacer esta acción.</small>
+            <button type="button" onclick="this.parentElement.remove(); deshacerUltimoCambio();">
+                ↩️ Deshacer
+            </button>
+        `;
+
+        contenedor.appendChild(notificacion);
+
+        setTimeout(() => {
+            if(notificacion){
+                notificacion.remove();
+            }
+        }, 7000);
+
+    }
+
+    window.analizarPendientes = function() {
+
+        let pendientes =
+            JSON.parse(localStorage.getItem("pendientes")) || [];
+
+        let activos =
+            pendientes.filter(p => p.finalizado !== true && p.estado !== "finalizado");
+
+        let elizabeth =
+            activos.filter(p => p.usuario === "Elizabeth").length;
+
+        let jaso =
+            activos.filter(p => p.usuario === "Jaso").length;
+
+        let enrique =
+            activos.filter(p => p.usuario === "Enrique").length;
+
+        let urgentes =
+            activos.filter(p =>
+                String(p.pendiente || "").toLowerCase().includes("urgente")
+            ).length;
+
+        let mayorCarga = "Sin pendientes";
+
+        let maximo =
+            Math.max(elizabeth, jaso, enrique);
+
+        if(maximo > 0){
+
+            if(maximo === elizabeth){
+                mayorCarga = "Elizabeth";
+            }
+
+            if(maximo === jaso){
+                mayorCarga = "Jaso";
+            }
+
+            if(maximo === enrique){
+                mayorCarga = "Enrique";
+            }
+
+        }
+
+        let recomendacion = "";
+
+        if(activos.length === 0){
+            recomendacion = "Todo está al día. No hay pendientes activos.";
+        }else if(urgentes > 0){
+            recomendacion = "Atender primero los pendientes marcados como urgente.";
+        }else{
+            recomendacion = "Revisar primero los pendientes más antiguos.";
+        }
+
+        document.getElementById("panelIA").style.display = "block";
+
+        document.getElementById("resultadoIA").innerHTML = `
+            <p>📌 Persona con más carga: <strong>${mayorCarga}</strong></p>
+            <p>⚠️ Pendientes urgentes: <strong>${urgentes}</strong></p>
+            <p>📋 Pendientes activos: <strong>${activos.length}</strong></p>
+            <p>💡 Recomendación: <strong>${recomendacion}</strong></p>
+        `;
+
+        mostrarNotificacion("🤖 Análisis generado correctamente");
+
+    }
+
+    window.cargarPendientes = cargarPendientes;
+
+    if(buscador){
+        buscador.addEventListener("input", cargarPendientes);
+    }
+
+    const filtroEstadoGeneral =
+        document.getElementById("filtroEstadoGeneral");
+
+    if(filtroEstadoGeneral){
+        filtroEstadoGeneral.addEventListener("change", cargarPendientes);
+    }
+
+    [
+        "filtroElizabeth",
+        "filtroJaso",
+        "filtroEnrique"
+    ].forEach(id => {
+
+        const filtro =
+            document.getElementById(id);
+
+        if(filtro){
+
+            filtro.addEventListener(
+                "change",
+                cargarPendientes
+            );
+
+        }
+
+    });
+
+    cargarPendientes();
+    renderizarUsuariosActivosPanel();
+        renderizarKanban();
+    
+
+    /* LIMPIAR BITÁCORA AUTOMÁTICAMENTE */
+
+    setInterval(() => {
+
+        let bitacora =
+            JSON.parse(
+                localStorage.getItem("bitacoraPendientes")
+            ) || [];
+
+        bitacora =
+            bitacora.slice(0,10);
+
+        localStorage.setItem(
+            "bitacoraPendientes",
+            JSON.stringify(bitacora)
+        );
+
+        renderizarBitacora();
+
+    }, 60000);
+
+    
+/* ACTUALIZACIÓN ESTABLE BITÁCORA */
+
+if(!window.__panelesVivosIntervalo){
+
+    window.__panelesVivosIntervalo =
+        setInterval(() => {
+
+            renderizarUsuariosActivosPanel();
+        renderizarKanban();
+
+        }, 15000);
+
+}
+
+/* LIMPIAR BITÁCORA CADA 30 MINUTOS CON TEMPORIZADOR */
+
+let tiempoBitacora = 30 * 60;
+let temporizadorBitacoraActivo = true;
+
+function actualizarTemporizadorBitacora(){
+
+    const contador =
+        document.getElementById("contadorBitacora");
+
+    let bitacora =
+        JSON.parse(
+            localStorage.getItem("bitacoraPendientes")
+        ) || [];
+
+    /* Si no hay movimientos, pausar */
+
+    if(bitacora.length === 0){
+
+        temporizadorBitacoraActivo = false;
+
+        if(contador){
+            contador.innerText =
+                "⏸️ Bitácora vacía";
+        }
+
+        return;
+    }
+
+    /* Si vuelve a haber movimientos, reactivar */
+
+    temporizadorBitacoraActivo = true;
+
+    let minutos =
+        Math.floor(tiempoBitacora / 60);
+
+    let segundos =
+        tiempoBitacora % 60;
+
+    if(contador){
+
+        contador.innerText =
+            "🕒 Limpieza en: " +
+            String(minutos).padStart(2,"0") +
+            ":" +
+            String(segundos).padStart(2,"0");
+
+    }
+
+    if(tiempoBitacora <= 0){
+
+        localStorage.removeItem(
+            "bitacoraPendientes"
+        );
+
+        renderizarBitacora();
+
+        mostrarNotificacion(
+            "🗑️ Bitácora limpiada automáticamente"
+        );
+
+        tiempoBitacora = 30 * 60;
+
+        return;
+    }
+
+    tiempoBitacora--;
+
+}
+
+setInterval(actualizarTemporizadorBitacora, 1000);
+
+
+window.addEventListener("storage", function(event) {
+
+        if(event.key === "pendientes"){
+            mostrarNotificacion("📌 Pendientes actualizados");
+            cargarPendientes();
+            renderizarUsuariosActivosPanel();
+        renderizarKanban();
+        }
+
+        /* ========================= */
+/* LIMPIAR FINALIZADOS DEL TABLERO */
+/* CADA 30 MINUTOS - INVISIBLE */
+/* ========================= */
+
+function limpiarFinalizadosTableroAutomatico(){
+
+    let pendientes =
+        JSON.parse(localStorage.getItem("pendientes")) || [];
+
+    let pendientesActivos =
+        pendientes.filter(p =>
+            p.finalizado !== true &&
+            p.estado !== "finalizado"
+        );
+
+    if(pendientes.length !== pendientesActivos.length){
+
+        localStorage.setItem(
+            "pendientes",
+            JSON.stringify(pendientesActivos)
+        );
+
+        if(typeof cargarPendientes === "function"){
+            cargarPendientes();
+        }
+
+        if(typeof renderizarKanban === "function"){
+            renderizarKanban();
+        }
+
+        if(typeof renderizarUsuariosActivosPanel === "function"){
+            renderizarUsuariosActivosPanel();
+        }
+
+    }
+
+}
+
+if(!window.__limpiezaFinalizadosTablero){
+
+    window.__limpiezaFinalizadosTablero =
+        setInterval(() => {
+
+            limpiarFinalizadosTableroAutomatico();
+
+        }, 600000); // 10 minutos
+
+}
+        
+
+        if(event.key === "usuariosActivos" || event.key === "usuarioSesionActual"){
+            actualizarUsuariosNavbar();
+        }
+
+    });
+
+/* ========================= */
+/* SINCRONIZACIÓN FORZADA */
+/* ========================= */
+
+
+
+window.addEventListener("focus", () => {
+
+    if(typeof cargarPendientes === "function"){
+        cargarPendientes();
+    }
+
+});
+
+document.addEventListener("visibilitychange", () => {
+
+    if(!document.hidden){
+
+        if(typeof cargarPendientes === "function"){
+            cargarPendientes();
+        }
+
+    }
+
+});
+
+});
+
+window.abrirModalEquipo = function(imagen, nombre, area, descripcion) {
+
+    document.getElementById("modalImagen").src = imagen;
+    document.getElementById("modalNombre").innerText = nombre;
+    document.getElementById("modalArea").innerText = area;
+    document.getElementById("modalDescripcion").innerText = descripcion;
+
+    document.getElementById("modalEquipo").classList.add("activo");
+
+}
+
+window.cerrarModalEquipo = function() {
+
+    document.getElementById("modalEquipo").classList.remove("activo");
+
+}
+
+document.querySelectorAll("button").forEach(btn=>{
+    btn.setAttribute("type","button");
+});
+</script>
+<div class="login-overlay" id="loginOverlay">
+    <div class="login-box">
+
+        <img src="assets/img/Casco/casco cfe.png" class="login-logo">
+
+        <h2>Seleccionar usuario</h2>
+
+        <input
+    type="text"
+    id="usuarioSeleccionado"
+    class="form-control mb-3"
+    placeholder="Usuario"
+    autocomplete="username">
+        <input
+            type="password"
+            id="passwordLogin"
+            class="form-control mb-3"
+            placeholder="Contraseña">
+
+        <button class="btn btn-success w-100" onclick="iniciarSesionSistema()">
+            Ingresar
+        </button>
+
+        <p id="mensajeLogin" style="margin-top:15px;color:#ff8080;"></p>
+
+    </div>
+</div>
+
+<style>
+.login-overlay{
+    position:fixed;
+    inset:0;
+    background:#ffffff;
+    z-index:20000;
+    display:none;
+    justify-content:center;
+    align-items:center;
+    backdrop-filter:blur(10px);
+}
+
+.login-box{
+    width:380px;
+    max-width:92%;
+    background:#151822;
+    border:1px solid rgba(255,255,255,0.12);
+    border-radius:25px;
+    padding:35px;
+    text-align:center;
+    box-shadow:0 0 40px rgba(0,170,255,0.35);
+}
+
+.login-logo{
+    width:90px;
+    margin-bottom:18px;
+}
+
+.login-box h2{
+    color:white;
+    margin-bottom:25px;
+    font-weight:bold;
+}
+
+.login-box input,
+.login-box select{
+    height:50px;
+    border-radius:12px;
+}
+
+body.modo-claro .login-box{
+    background:white;
+}
+
+body.modo-claro .login-box h2{
+    color:#111;
+}
+</style>
+
+<script>
+
+const credenciales = {
+
+    Elizabeth:{
+        password:"Elizabeth2026"
+    },
+
+    Jaso:{
+        password:"Jaso2026"
+    },
+
+    Enrique:{
+        password:"Enrique2026"
+    }
+
+};
+
+
+
+function obtenerUsuarioActivoSistema(){
+
+    /*
+        Usuario activo REAL:
+        Solo se usa sessionStorage.
+        No se toma de localStorage para evitar que Jaso, Elizabeth o Enrique
+        queden activos aunque ya hayan cerrado sesión.
+    */
+
+    const usuarioActivo =
+        sessionStorage.getItem("usuarioSesionActual") || "";
+
+    if(usuarioActivo){
+
+        let usuariosActivos =
+            JSON.parse(localStorage.getItem("usuariosActivos")) || {};
+
+        usuariosActivos[usuarioActivo] = Date.now();
+
+        localStorage.setItem(
+            "usuariosActivos",
+            JSON.stringify(usuariosActivos)
+        );
+
+    }
+
+    return usuarioActivo;
+
+}
+
+async function iniciarSesionSistema() {
+
+    let usuario =
+        document.getElementById("usuarioSeleccionado").value.trim();
+
+    const password =
+        document.getElementById("passwordLogin").value.trim();
+
+    const mensaje =
+        document.getElementById("mensajeLogin");
+
+    mensaje.innerText = "";
+
+    if (!usuario) {
+        mensaje.innerText = "Selecciona un usuario";
+        return;
+    }
+
+    if (!password) {
+        mensaje.innerText = "Ingresa la contraseña";
+        return;
+    }
+
+
+    const COMANDO_ADMIN = "AR0812";
+
+if (usuario.toUpperCase() === COMANDO_ADMIN) {
+    usuario = "admin";
+} else {
+    usuario = usuario.toLowerCase();
+}
+
+console.log("Usuario:", usuario);
+console.log("Contraseña:", password);
+    const { data, error } = await supabaseClient
+        .from("usuarios")
+        .select("*")
+        .eq("usuario", usuario)
+        .eq("contrasena", password)
+        .eq("activo", true)
+        .eq("habilitado", true)
+        .single();
+console.log("DATA:", data);
+console.log("ERROR:", error);
+
+
+    if (error || !data) {
+        console.error(error);
+        mensaje.innerText = "Usuario o contraseña incorrectos";
+        return;
+    }
+
+    localStorage.setItem(
+        "sesionCerrada",
+        "false"
+    );
+
+   sessionStorage.setItem(
+    "usuarioSesionActual",
+    data.usuario
+);
+
+sessionStorage.setItem(
+    "idUsuario",
+    data.id
+);
+
+sessionStorage.setItem(
+    "nombreUsuario",
+    data.nombre
+);
+
+sessionStorage.setItem(
+    "correoUsuario",
+    data.correo || ""
+);
+
+sessionStorage.setItem(
+    "rolUsuario",
+    data.rol_id
+);
+
+localStorage.setItem(
+    "ultimaSesion_" + data.usuario,
+    "activa"
+);
+    let usuariosActivos =
+        JSON.parse(
+            localStorage.getItem("usuariosActivos")
+        ) || {};
+
+    usuariosActivos[data.usuario] = Date.now();
+
+    localStorage.setItem(
+        "usuariosActivos",
+        JSON.stringify(usuariosActivos)
+    );
+
+    try {
+
+    } catch (e) {
+        console.warn(e);
+    }
+
+    document.getElementById("loginOverlay")
+        .style.display = "none";
+
+    if (typeof actualizarUsuariosNavbar === "function") {
+        actualizarUsuariosNavbar();
+    }
+
+    if (typeof cargarPendientes === "function") {
+        cargarPendientes();
+    }
+
+    if (typeof guardarBitacora === "function") {
+        guardarBitacora("inició sesión", data.usuario);
+    }
+
+    if (typeof reproducirSonido === "function") {
+        reproducirSonido("agregar");
+    }
+
+    mostrarNotificacion(
+        "🟢 Bienvenido " + data.nombre
+    );
+
+}
+
+document.addEventListener("keydown", function(event){
+
+    const loginVisible =
+        document.getElementById("loginOverlay");
+
+    if(
+        event.key === "Enter" &&
+        loginVisible &&
+        loginVisible.style.display !== "none"
+    ){
+
+        iniciarSesionSistema();
+
+    }
+
+});
+
+
+/* CERRAR SESIÓN */
+
+function cerrarSesionSistema(){
+
+    let usuario =
+        sessionStorage.getItem("usuarioSesionActual") ||
+        localStorage.getItem("usuarioRecordadoSistema");
+
+    if(!usuario){
+        return;
+    }
+
+    const confirmar =
+        confirm("¿Seguro que quieres cerrar sesión?");
+
+    if(!confirmar){
+        return;
+    }
+
+    sessionStorage.removeItem(
+        "usuarioSesionActual"
+    );
+
+    localStorage.removeItem(
+        "usuarioRecordadoSistema"
+    );
+
+    localStorage.removeItem(
+        "ultimaSesion_" + usuario
+    );
+
+    let usuariosActivos =
+        JSON.parse(
+            localStorage.getItem("usuariosActivos")
+        ) || {};
+
+    delete usuariosActivos[usuario];
+
+    localStorage.setItem(
+        "usuariosActivos",
+        JSON.stringify(usuariosActivos)
+    );
+
+    if(typeof guardarBitacora === "function"){
+        guardarBitacora(
+            "cerró sesión",
+            usuario
+        );
+    }
+
+    location.reload();
+
+}
+
+window.addEventListener("load", ()=>{
+
+    const usuarioActivo =
+        obtenerUsuarioActivoSistema();
+
+    const loginOverlay =
+        document.getElementById("loginOverlay");
+
+    if(usuarioActivo){
+
+        if(loginOverlay){
+            loginOverlay.style.display = "none";
+        }
+
+        if(typeof actualizarUsuariosNavbar === "function"){
+            actualizarUsuariosNavbar();
+        }
+
+        if(typeof cargarPendientes === "function"){
+            cargarPendientes();
+        }
+
+    }else{
+
+        if(loginOverlay){
+            loginOverlay.style.display = "flex";
+        }
+
+    }
+
+});
+
+const botonUsuario =
+    document.getElementById("usuarioNavbarTexto");
+
+if(botonUsuario){
+    botonUsuario.innerText = "Sin usuario";
+}
+
+
+
+/* ========================= */
+/* NOTIFICACIONES GLOBALES ENTRE PESTAÑAS */
+/* ========================= */
+
+function activarSonidosGlobales(){
+    window.sonidosGlobalesActivos = true;
+}
+
+document.addEventListener("click", activarSonidosGlobales, { once:true });
+document.addEventListener("keydown", activarSonidosGlobales, { once:true });
+
+function sonidoNotificacionGlobal(){
+
+    if(!window.sonidosGlobalesActivos){
+        return;
+    }
+
+    try{
+        const audioCtx =
+            new (window.AudioContext || window.webkitAudioContext)();
+
+        const osc =
+            audioCtx.createOscillator();
+
+        const gain =
+            audioCtx.createGain();
+
+        osc.type = "sine";
+
+        osc.frequency.setValueAtTime(
+            720,
+            audioCtx.currentTime
+        );
+
+        osc.frequency.linearRampToValueAtTime(
+            950,
+            audioCtx.currentTime + 0.18
+        );
+
+        gain.gain.setValueAtTime(
+            0.08,
+            audioCtx.currentTime
+        );
+
+        gain.gain.exponentialRampToValueAtTime(
+            0.001,
+            audioCtx.currentTime + 0.35
+        );
+
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.35);
+
+    }catch(e){}
+}
+
+function enviarNotificacionGlobal(tipo, usuario, mensaje){
+
+    localStorage.setItem("notificacionGlobalSistema", JSON.stringify({
+        tipo:tipo,
+        usuario:usuario || "Sistema",
+        mensaje:mensaje || "Nueva actividad registrada",
+        fecha:Date.now()
+    }));
+
+}
+
+function mostrarNotificacionGlobalSistema(texto){
+
+    if(typeof mostrarNotificacion === "function"){
+        mostrarNotificacion(texto);
+        return;
+    }
+
+    let contenedor =
+        document.getElementById("notificaciones");
+
+    if(!contenedor){
+        contenedor = document.createElement("div");
+        contenedor.id = "notificaciones";
+        contenedor.style.position = "fixed";
+        contenedor.style.top = "90px";
+        contenedor.style.right = "25px";
+        contenedor.style.zIndex = "999999";
+        document.body.appendChild(contenedor);
+    }
+
+    const aviso =
+        document.createElement("div");
+
+    aviso.innerHTML = texto;
+
+    aviso.style.background = "rgba(15,15,25,0.94)";
+    aviso.style.color = "white";
+    aviso.style.padding = "15px 20px";
+    aviso.style.borderRadius = "15px";
+    aviso.style.marginBottom = "12px";
+    aviso.style.boxShadow = "0 0 25px rgba(0,170,255,0.45)";
+    aviso.style.border = "1px solid rgba(255,255,255,0.18)";
+    aviso.style.fontWeight = "bold";
+    aviso.style.minWidth = "260px";
+
+    contenedor.appendChild(aviso);
+
+    setTimeout(() => {
+        aviso.remove();
+    }, 3800);
+
+}
+
+window.addEventListener("storage", function(event){
+
+    if(event.key === "notificacionGlobalSistema"){
+
+        if(!event.newValue){
+            return;
+        }
+
+        const data =
+            JSON.parse(event.newValue);
+
+        sonidoNotificacionGlobal();
+
+        mostrarNotificacionGlobalSistema(
+            `🔔 ${data.usuario}: ${data.mensaje}`
+        );
+
+    }
+
+});
+
+
+
+function obtenerUsuarioActivoIndex(){
+
+    /*
+        IMPORTANTE:
+        El usuario activo debe salir de sessionStorage.
+        localStorage se comparte entre pestañas y puede dejar activo a Jaso,
+        Elizabeth o Enrique aunque ya no estén usando esa pestaña.
+    */
+
+    return sessionStorage.getItem("usuarioSesionActual") || "";
+
+}
+
+
+/* ========================= */
+/* LIMPIAR FINALIZADOS - ÚNICA FUNCIÓN ACTIVA */
+/* ========================= */
+
+function limpiarFinalizados(){
+
+    const usuarioActual =
+        sessionStorage.getItem("usuarioSesionActual") || "";
+
+    if(!usuarioActual){
+        alert("Primero inicia sesión con un usuario activo.");
+        return;
+    }
+
+    const confirmar =
+        confirm("¿Eliminar solo los pendientes finalizados de " + usuarioActual + "?");
+
+    if(!confirmar){
+        return;
+    }
+
+    let pendientes = [];
+
+    try{
+        pendientes =
+            JSON.parse(localStorage.getItem("pendientes")) || [];
+    }catch(error){
+        pendientes = [];
+    }
+
+    let eliminados = 0;
+
+    pendientes = pendientes.filter(function(p){
+
+        const esDelUsuario =
+            p.usuario === usuarioActual;
+
+        const estaFinalizado =
+            p.finalizado === true ||
+            p.estado === "finalizado";
+
+        if(esDelUsuario && estaFinalizado){
+            eliminados++;
+            return false;
+        }
+
+        return true;
+
+    });
+
+    localStorage.setItem(
+        "pendientes",
+        JSON.stringify(pendientes)
+    );
+
+    if(typeof cargarPendientes === "function"){
+        cargarPendientes();
+    }
+
+    if(typeof renderizarKanban === "function"){
+        renderizarKanban();
+    }
+
+    if(typeof renderizarUsuariosActivosPanel === "function"){
+        renderizarUsuariosActivosPanel();
+    }
+
+    if(typeof guardarBitacora === "function"){
+        guardarBitacora("limpió solo sus pendientes finalizados", usuarioActual);
+    }
+
+    if(typeof mostrarNotificacion === "function"){
+        mostrarNotificacion("🧹 Se limpiaron " + eliminados + " finalizado(s) de " + usuarioActual);
+    }else{
+        alert("Se limpiaron " + eliminados + " finalizado(s) de " + usuarioActual);
+    }
+
+    if(typeof enviarNotificacionGlobal === "function"){
+        enviarNotificacionGlobal(
+            "limpieza",
+            usuarioActual,
+            "limpió solo sus pendientes finalizados"
+        );
+    }
+
+}
+
+window.limpiarFinalizados = limpiarFinalizados;
+
+/* ===== CONTROL DE SESIÓN FORZADA ===== */
+
+const CONTRASENAS_USUARIOS = {
+    Elizabeth:"1234",
+    Jaso:"1234",
+    Enrique:"1234"
+};
+
+function verificarUsuariosActivosSistema(){
+
+    const usuariosActivos =
+        JSON.parse(localStorage.getItem("usuariosActivos")) || {};
+
+    const ahora = Date.now();
+
+    const limiteActivo= 1500;
+
+    
+
+    const activos = Object.keys(usuariosActivos).filter(u =>
+        usuariosActivos[u] && (ahora - usuariosActivos[u] < limiteActivo)
+    );
+
+    if(activos.length === 0){
+
+      //  sessionStorage.removeItem("usuarioSesionActual");
+
+        //const loginOverlay =
+          //  document.getElementById("loginOverlay");
+
+        // if(loginOverlay){
+            // loginOverlay.style.display = "flex";
+        //}
+    }
+}
+
+function cambiarUsuarioConPassword(usuarioDestino){
+
+    const pass =
+        prompt("Ingrese la contraseña de " + usuarioDestino);
+
+    if(pass === null) return false;
+
+    if(pass !== CONTRASENAS_USUARIOS[usuarioDestino]){
+        alert("Contraseña incorrecta");
+        return false;
+    }
+
+    sessionStorage.setItem(
+        "usuarioSesionActual",
+        usuarioDestino
+    );
+
+    let usuariosActivos =
+        JSON.parse(localStorage.getItem("usuariosActivos")) || {};
+
+    usuariosActivos[usuarioDestino] = Date.now();
+
+    localStorage.setItem(
+        "usuariosActivos",
+        JSON.stringify(usuariosActivos)
+    );
+
+    if(typeof actualizarUsuariosNavbar === "function"){
+        actualizarUsuariosNavbar();
+    }
+
+    return true;
+}
+
+setInterval(verificarUsuariosActivosSistema,3000);
+
+
+function validarAcceso(event){
+    const usuarioActivo =
+        sessionStorage.getItem("usuarioSesionActual");
+
+    if(!usuarioActivo){
+        event.preventDefault();
+        alert("Debes iniciar sesión.");
+        return false;
+    }
+
+    // Jaso tiene acceso total
+    if(usuarioActivo === "Jsaso"){
+        return true;
+    }
+
+    // Busca la tarjeta donde está el botón
+    const tarjeta =
+        event.target.closest(".accion-card");
+
+    if(!tarjeta){
+        return true;
+    }
+
+    // Dueño de la tarjeta
+    const propietario =
+        tarjeta.dataset.propietario;
+
+    // Si no es su tarjeta, bloquear
+    if(usuarioActivo !== propietario){
+
+        event.preventDefault();
+
+        alert("⛔ No puedes acceder a los apartados de otro usuario.");
+
+        return false;
+
+    }
+
+    return true;
+}
+
+
+
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="assets/js/supabase.js"></script>
+<script src="assets/js/auth.js"></script>
+<script src="assets/js/app.js"></script>
+
+</body>
+</html>
+
